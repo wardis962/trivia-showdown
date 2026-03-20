@@ -1,0 +1,115 @@
+{
+  "102-easy": [
+    {"question":"What is the capital city of Jordan?","correct":"Amman","options":["Amman","Aqaba","Irbid","Zarqa"]},
+    {"question":"What is the official currency of Jordan?","correct":"Jordanian Dinar","options":["Jordanian Dinar","Jordanian Pound","Jordanian Riyal","Jordanian Dirham"]},
+    {"question":"Which famous ancient city carved in rock is located in Jordan?","correct":"Petra","options":["Petra","Jerash","Madaba","Ajloun"]},
+    {"question":"What is the national dish of Jordan?","correct":"Mansaf","options":["Mansaf","Falafel","Shawarma","Kabsa"]},
+    {"question":"What color is the star on the Jordanian flag?","correct":"White","options":["White","Yellow","Gold","Silver"]},
+    {"question":"Which river forms part of Jordan's western border?","correct":"Jordan River","options":["Jordan River","Nile River","Euphrates","Yarmouk River"]},
+    {"question":"What is the largest city in Jordan?","correct":"Amman","options":["Amman","Zarqa","Irbid","Aqaba"]},
+    {"question":"What is the name of the sea bordering Jordan to the west?","correct":"Dead Sea","options":["Dead Sea","Red Sea","Mediterranean Sea","Arabian Sea"]},
+    {"question":"What is the official language of Jordan?","correct":"Arabic","options":["Arabic","English","French","Turkish"]},
+    {"question":"Jordan shares a border with how many countries?","correct":"5","options":["5","3","4","6"]}
+  ],
+  "102-medium": [
+    {"question":"In what year did Jordan gain independence from Britain?","correct":"1946"},
+    {"question":"Who was the founder of the modern Hashemite Kingdom of Jordan?","correct":"King Abdullah I"},
+    {"question":"What ancient Roman city ruins are located in northern Jordan?","correct":"Jerash"},
+    {"question":"What is the name of Jordan's only port city?","correct":"Aqaba"},
+    {"question":"Which Jordanian castle was built by the Crusaders in the 12th century?","correct":"Kerak Castle"},
+    {"question":"What is the name of the ancient trade route that runs through Jordan from north to south?","correct":"King's Highway"},
+    {"question":"What is the name of the desert that covers most of eastern Jordan?","correct":"Badia Desert"},
+    {"question":"Which king of Jordan signed a peace treaty with Israel in 1994?","correct":"King Hussein"},
+    {"question":"What is the name of Jordan's state-owned airline?","correct":"Royal Jordanian"},
+    {"question":"In which city is the University of Jordan located?","correct":"Amman"}
+  ],
+  "102-hard": [
+    {"question":"In what year was Petra rediscovered by Swiss explorer Johann Ludwig Burckhardt?","correct":"1812"},
+    {"question":"What is the name of the Nabataean treasury carved in Petra?","correct":"Al-Khazneh"},
+    {"question":"Which ancient Jordanian site contains the oldest surviving map of the Holy Land?","correct":"Madaba"},
+    {"question":"What is the elevation of Jordan's highest point, Jabal Umm ad Dami?","correct":"1854 meters"},
+    {"question":"What ancient city north of Amman did Alexander the Great rename Philadelphia?","correct":"Amman"},
+    {"question":"What percentage of Jordan's land is desert?","correct":"75%"},
+    {"question":"In which year did Jordan and Israel sign the Wadi Araba peace treaty?","correct":"1994"},
+    {"question":"What is the name of the Jordanian special forces royal protection unit?","correct":"1st Royal Guards Brigade"},
+    {"question":"Which Jordanian city is known as the Rose-Red City?","correct":"Petra"},
+    {"question":"What is the name of the mosaic map found in a church in Madaba?","correct":"Madaba Map"}
+  ],
+
+  "103-easy": [
+    {"question":"How many rounds are in a standard professional boxing match?","correct":"12","options":["12","10","15","8"]},
+    {"question":"Which country does boxing legend Muhammad Ali come from?","correct":"USA","options":["USA","UK","Cuba","Jamaica"]},
+    {"question":"What do boxers wear on their hands to protect themselves?","correct":"Boxing gloves","options":["Boxing gloves","Tape only","Bare fists","Mittens"]},
+    {"question":"Which weight class is the heaviest in boxing?","correct":"Heavyweight","options":["Heavyweight","Super heavyweight","Cruiserweight","Light heavyweight"]},
+    {"question":"How long is each round in professional boxing?","correct":"3 minutes","options":["3 minutes","2 minutes","4 minutes","5 minutes"]},
+    {"question":"What is it called when a boxer is knocked down and can't get up before the count of 10?","correct":"Knockout","options":["Knockout","Foul","Draw","Surrender"]},
+    {"question":"Muhammad Ali's original name before he converted to Islam was?","correct":"Cassius Clay","options":["Cassius Clay","Mike Ali","John Clay","James Ali"]},
+    {"question":"Which country is Saul 'Canelo' Alvarez from?","correct":"Mexico","options":["Mexico","USA","Puerto Rico","Cuba"]},
+    {"question":"What is the term for a boxer who leads with their right hand?","correct":"Southpaw","options":["Southpaw","Orthodox","Switch","Rightie"]},
+    {"question":"How many judges score a professional boxing match?","correct":"3","options":["3","2","4","5"]}
+  ],
+  "103-medium": [
+    {"question":"Who is known as 'The Greatest' in boxing history?","correct":"Muhammad Ali"},
+    {"question":"Which boxer was nicknamed 'Iron Mike'?","correct":"Mike Tyson"},
+    {"question":"Who did Muhammad Ali defeat to win his first world heavyweight title in 1964?","correct":"Sonny Liston"},
+    {"question":"Which Jordanian boxer won a silver medal at the 2024 Paris Olympics?","correct":"Ziad Eashash"},
+    {"question":"What is the name of the punch thrown with the rear hand in boxing?","correct":"Cross"},
+    {"question":"Who held the heavyweight title for the longest unbeaten streak — 49 fights?","correct":"Floyd Mayweather"},
+    {"question":"What does TKO stand for in boxing?","correct":"Technical Knockout"},
+    {"question":"Which city is known as the boxing capital of the world?","correct":"Las Vegas"},
+    {"question":"Who beat Mike Tyson in one of the biggest upsets in boxing history in 1990?","correct":"Buster Douglas"},
+    {"question":"What is the lightest weight class in professional boxing?","correct":"Minimumweight"}
+  ],
+  "103-hard": [
+    {"question":"In what year did Muhammad Ali refuse induction into the US Army?","correct":"1967"},
+    {"question":"What was the name of the famous 1974 fight between Muhammad Ali and George Foreman in Zaire?","correct":"Rumble in the Jungle"},
+    {"question":"Which boxer has the most world championship title defenses in history?","correct":"Joe Louis"},
+    {"question":"What is the exact weight limit in pounds for the welterweight division?","correct":"147 pounds"},
+    {"question":"Who was the first boxer to defeat Floyd Mayweather as a professional?","correct":"Nobody — he retired undefeated"},
+    {"question":"In which year did Sugar Ray Leonard win his first world title?","correct":"1979"},
+    {"question":"What is the name of the governing body that sanctions WBC title fights?","correct":"World Boxing Council"},
+    {"question":"Who did Manny Pacquiao defeat to become the first boxer to win 8 world titles in 8 weight divisions?","correct":"Antonio Margarito"},
+    {"question":"In what city did the famous Thrilla in Manila fight take place in 1975?","correct":"Manila, Philippines"},
+    {"question":"What was Mike Tyson's professional record before his loss to Buster Douglas?","correct":"37-0"}
+  ],
+
+  "101-easy": [
+    {"question":"Who is this player?","correct":"Cristiano Ronaldo","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Cristiano_Ronaldo_2018.jpg/800px-Cristiano_Ronaldo_2018.jpg","options":["Cristiano Ronaldo","Lionel Messi","Neymar","Kylian Mbappé"]},
+    {"question":"Who is this player?","correct":"Lionel Messi","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Lionel-Messi-Argentina-2022-FIFA-World-Cup_%28cropped%29.jpg/800px-Lionel-Messi-Argentina-2022-FIFA-World-Cup_%28cropped%29.jpg","options":["Lionel Messi","Cristiano Ronaldo","Luka Modric","Sergio Ramos"]},
+    {"question":"Who is this player?","correct":"Neymar Jr","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Neymar_-_genuflexion.jpg/800px-Neymar_-_genuflexion.jpg","options":["Neymar Jr","Vinicius Jr","Rodrygo","Richarlison"]},
+    {"question":"Who is this player?","correct":"Kylian Mbappé","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/2019-07-17_SG_Dynamo_Dresden_vs_Paris_Saint-Germain_by_Sandro_Halank%E2%80%93138_%28cropped%29.jpg/800px-2019-07-17_SG_Dynamo_Dresden_vs_Paris_Saint-Germain_by_Sandro_Halank%E2%80%93138_%28cropped%29.jpg","options":["Kylian Mbappé","Antoine Griezmann","Ousmane Dembélé","Karim Benzema"]},
+    {"question":"Who is this player?","correct":"Mohamed Salah","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Mohamed_Salah_2018.jpg/800px-Mohamed_Salah_2018.jpg","options":["Mohamed Salah","Sadio Mané","Riyad Mahrez","Hakim Ziyech"]},
+    {"question":"Who is this player?","correct":"Robert Lewandowski","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Robert_Lewandowski_2015.jpg/800px-Robert_Lewandowski_2015.jpg","options":["Robert Lewandowski","Karim Benzema","Harry Kane","Erling Haaland"]}
+  ],
+  "101-medium": [
+    {"question":"Who is this player? Name him.","correct":"Luka Modric","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Luka_Modri%C4%87_2019.jpg/800px-Luka_Modri%C4%87_2019.jpg"},
+    {"question":"Who is this player? Name him.","correct":"Erling Haaland","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Erling_Haaland_2023.jpg/800px-Erling_Haaland_2023.jpg"},
+    {"question":"Who is this player? Name him.","correct":"Virgil van Dijk","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Virgil_van_Dijk_2018.jpg/800px-Virgil_van_Dijk_2018.jpg"},
+    {"question":"Who is this player? Name him.","correct":"Kevin De Bruyne","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/20180617_FIFA_WC_BEL_PAN_Kevin_De_Bruyne_Mika_Lehtinen_BS7_0499_%28cropped%29.jpg/800px-20180617_FIFA_WC_BEL_PAN_Kevin_De_Bruyne_Mika_Lehtinen_BS7_0499_%28cropped%29.jpg"},
+    {"question":"Who is this player? Name him.","correct":"Pedri","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Pedri_2021.jpg/800px-Pedri_2021.jpg"},
+    {"question":"Who is this player? Name him.","correct":"Jude Bellingham","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Jude_Bellingham_2021_%28cropped%29.jpg/800px-Jude_Bellingham_2021_%28cropped%29.jpg"}
+  ],
+  "101-hard": [
+    {"question":"Who is this player? Name him and his current club.","correct":"Vinicius Jr — Real Madrid","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Vinicius_Junior_2022_%28cropped%29.jpg/800px-Vinicius_Junior_2022_%28cropped%29.jpg"},
+    {"question":"Who is this player? Name him and his nationality.","correct":"Rodri — Spanish","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Rodri_2022_%28cropped%29.jpg/800px-Rodri_2022_%28cropped%29.jpg"},
+    {"question":"Who is this player? Name him and what he is famous for.","correct":"Zinedine Zidane — headbutt in 2006 World Cup final","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Zinedine_Zidane_by_Tasnim_03.jpg/800px-Zinedine_Zidane_by_Tasnim_03.jpg"},
+    {"question":"Who is this player? Name him and his country.","correct":"Son Heung-min — South Korea","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Son_Heung-min_2019.jpg/800px-Son_Heung-min_2019.jpg"},
+    {"question":"Who is this player? Name him and his position.","correct":"Thibaut Courtois — Goalkeeper","image":"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Thibaut_Courtois_2018_%28cropped%29.jpg/800px-Thibaut_Courtois_2018_%28cropped%29.jpg"}
+  ],
+
+  "104-easy": [
+    {"question":"Name this song and artist!","correct":"Shape of You — Ed Sheeran","audio":"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"},
+    {"question":"Name this song and artist!","correct":"Blinding Lights — The Weeknd","audio":"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"},
+    {"question":"Name this song and artist!","correct":"Dance Monkey — Tones and I","audio":"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"}
+  ],
+  "104-medium": [
+    {"question":"Name this song and artist!","correct":"Stay — The Kid LAROI ft. Justin Bieber","audio":"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"},
+    {"question":"Name this song and artist!","correct":"Levitating — Dua Lipa","audio":"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3"},
+    {"question":"Name this song and artist!","correct":"As It Was — Harry Styles","audio":"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3"}
+  ],
+  "104-hard": [
+    {"question":"Name this song and artist!","correct":"INDUSTRY BABY — Lil Nas X ft. Jack Harlow","audio":"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3"},
+    {"question":"Name this song and artist!","correct":"Peaches — Justin Bieber","audio":"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3"},
+    {"question":"Name this song and artist!","correct":"Bad Guy — Billie Eilish","audio":"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3"}
+  ]
+}

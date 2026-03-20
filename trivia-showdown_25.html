@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Trivia Showdown </title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;min-height:100vh;overflow-x:hidden}
+:root{
+  --bg:#0d0d0d;
+  --bg2:#161616;
+  --bg3:#1f1f1f;
+  --bg4:#2a2a2a;
+  --red:#e8192c;
+  --red2:#ff2d42;
+  --red3:#ff6070;
+  --yellow:#f5c800;
+  --yellow2:#ffe033;
+  --yellow3:#fff4a0;
+  --white:#ffffff;
+  --offwhite:#f0f0f0;
+  --dim:#888;
+  --dim2:#555;
+  --team-a:#1a9fff;
+  --team-b:#ff5c1a;
+  --team-as:#0a2540;
+  --team-bs:#3d1a08;
+  --shared:#00c97a;
+  --shareds:#003d25;
+  --easy:#00c97a;
+  --med:#f5c800;
+  --hard:#e8192c;
+  --radius:6px;
+  --font-display:'Bebas Neue',sans-serif;
+  --font-cond:'Barlow Condensed',sans-serif;
+  --font-body:'Barlow',sans-serif;
+}
+body{background:var(--bg);color:var(--white);font-family:var(--font-body);background-image:radial-gradient(circle at 50% 0%,rgba(245,200,0,.07) 0%,transparent 60%)}
+
+/* ── SCANLINES overlay for retro feel ── */
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.08) 2px,rgba(0,0,0,.08) 4px);pointer-events:none;z-index:9999}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes scUp{0%{transform:scale(1)}50%{transform:scale(1.35)}100%{transform:scale(1)}}
+@keyframes tPulse{0%,100%{color:var(--red2)}50%{color:#fff}}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+@keyframes glowA{0%,100%{box-shadow:0 0 0 0 rgba(26,159,255,.4)}50%{box-shadow:0 0 0 10px rgba(26,159,255,0)}}
+@keyframes glowB{0%,100%{box-shadow:0 0 0 0 rgba(255,92,26,.4)}50%{box-shadow:0 0 0 10px rgba(255,92,26,0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes popIn{0%{opacity:0;transform:translate(-50%,-50%) scale(.5) rotate(-4deg)}65%{transform:translate(-50%,-50%) scale(1.07) rotate(1deg)}100%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0deg)}}
+@keyframes popOut{to{opacity:0;transform:translate(-50%,-50%) scale(.75)}}
+@keyframes marquee{0%{background-position:0 0}100%{background-position:60px 0}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ══ TOAST ══ */
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--red);color:var(--white);font-family:var(--font-cond);font-size:1rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:12px 28px;border-radius:var(--radius);box-shadow:4px 4px 0 #8a0010;z-index:9999;opacity:0;transition:all .25s;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* stripe header accent */
+.stripe{height:6px;background:repeating-linear-gradient(90deg,var(--red) 0px,var(--red) 20px,var(--yellow) 20px,var(--yellow) 40px,var(--white) 40px,var(--white) 60px);animation:marquee 1.2s linear infinite;flex-shrink:0}
+
+.screen{display:none;position:relative;z-index:1}
+.screen.active{display:block}
+
+/* ══ SETUP ══ */
+#setup{min-height:100vh;display:flex;flex-direction:column}
+.setup-inner{flex:1;padding:32px 24px 48px}
+.sh{text-align:center;margin-bottom:32px;position:relative}
+.sh h1{font-family:var(--font-display);font-size:clamp(3.5rem,8vw,7rem);color:var(--yellow);letter-spacing:.04em;line-height:.95;text-shadow:4px 4px 0 var(--red),8px 8px 0 rgba(0,0,0,.4)}
+.sh p{font-family:var(--font-cond);font-size:1rem;letter-spacing:.25em;text-transform:uppercase;color:var(--dim);margin-top:8px}
+.sh .sub-accent{display:inline-block;background:var(--red);color:var(--white);font-family:var(--font-cond);font-size:.75rem;font-weight:700;letter-spacing:.15em;padding:3px 12px;margin-bottom:10px;text-transform:uppercase}
+
+.sc{max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.sr{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+.card{background:var(--bg2);border:2px solid var(--bg4);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.card.card-a::before{background:var(--team-a)}
+.card.card-b::before{background:var(--team-b)}
+.card.card-s::before{background:var(--shared)}
+.card.card-plain::before{background:var(--yellow)}
+
+.card h3{font-family:var(--font-cond);font-size:1.3rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.badge{display:inline-block;width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.ig{margin-bottom:14px}
+.ig label{display:block;font-family:var(--font-cond);font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:5px}
+.ig input{width:100%;background:var(--bg3);border:2px solid var(--bg4);border-radius:var(--radius);padding:9px 12px;color:var(--white);font-family:var(--font-body);font-size:.95rem;outline:none;transition:border-color .15s}
+.ig input:focus{border-color:var(--yellow)}
+
+/* category card grid */
+.cscroll{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-height:260px;overflow-y:auto;padding-right:4px}
+.cscroll::-webkit-scrollbar{width:4px}
+.cscroll::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:2px}
+.csg{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;max-height:200px;overflow-y:auto;padding-right:4px}
+
+.cb{
+  background:var(--bg3);border:2px solid var(--bg4);border-radius:10px;
+  padding:10px 6px 8px;color:var(--dim);font-family:var(--font-cond);
+  font-size:.72rem;font-weight:700;cursor:pointer;text-align:center;
+  transition:all .13s;line-height:1.2;text-transform:uppercase;letter-spacing:.03em;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+}
+.cb .cicon{font-size:1.8rem;line-height:1;display:block;filter:grayscale(.4)}
+.cb:hover{background:var(--bg4);color:var(--white);border-color:var(--dim2);transform:translateY(-2px)}
+.cb:hover .cicon{filter:grayscale(0)}
+.cb.sa{background:rgba(26,159,255,.12);border-color:var(--team-a);color:var(--team-a)}
+.cb.sa .cicon{filter:grayscale(0)}
+.cb.sb{background:rgba(255,92,26,.12);border-color:var(--team-b);color:var(--team-b)}
+.cb.sb .cicon{filter:grayscale(0)}
+.cb.ss{background:rgba(0,201,122,.12);border-color:var(--shared);color:var(--shared)}
+.cb.ss .cicon{filter:grayscale(0)}
+.cb.dis{opacity:.2;pointer-events:none}
+.sc-cnt{font-family:var(--font-cond);font-size:.75rem;font-weight:700;letter-spacing:.08em;color:var(--dim);margin-top:8px;text-transform:uppercase}
+
+.sw{text-align:center;margin-top:16px}
+.sbtn{display:inline-block;padding:16px 56px;background:var(--yellow);color:var(--bg);font-family:var(--font-display);font-size:2rem;letter-spacing:.06em;border:none;border-radius:var(--radius);cursor:pointer;transition:all .15s;box-shadow:4px 4px 0 var(--red);position:relative}
+.sbtn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--red)}
+.sbtn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--red)}
+.sbtn:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:2px 2px 0 var(--dim2)}
+
+/* ══ GAME ══ */
+#game{min-height:100vh;display:none;flex-direction:column}
+#game.active{display:flex}
+
+.scoreboard{flex-shrink:0;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;background:var(--bg2);border-bottom:3px solid var(--yellow);padding:10px 20px;gap:12px}
+.tscore{display:flex;flex-direction:column;align-items:center;gap:0;padding:8px 16px;border-radius:var(--radius)}
+.tscore.a{background:rgba(26,159,255,.08);border:2px solid rgba(26,159,255,.2)}
+.tscore.b{background:rgba(255,92,26,.08);border:2px solid rgba(255,92,26,.2)}
+.tscore .tn{font-family:var(--font-cond);font-size:.7rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+.tscore .pts{font-family:var(--font-display);font-size:3rem;line-height:1}
+.tscore.a .pts{color:var(--team-a)}
+.tscore.b .pts{color:var(--team-b)}
+.tscore.at.a{animation:glowA 1.8s infinite}
+.tscore.at.b{animation:glowB 1.8s infinite}
+
+.tmid{text-align:center}
+.tmid .show-title{font-family:var(--font-display);font-size:1.6rem;color:var(--yellow);letter-spacing:.06em;line-height:1}
+.tmid .tl{font-family:var(--font-cond);font-size:.65rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);margin-top:4px}
+.tmid .tn2{font-family:var(--font-cond);font-size:1.1rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+
+.board-wrap{flex:1;padding:10px 16px 6px;display:flex;flex-direction:column;gap:8px;min-height:0}
+.board{flex:1;display:grid;gap:5px;min-height:0}
+
+/* category headers */
+.ch{background:var(--bg2);border:2px solid var(--bg4);border-radius:var(--radius);padding:8px 6px;text-align:center;position:relative;overflow:hidden}
+.ch::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px}
+.ch.own-a::after{background:var(--team-a)}
+.ch.own-b::after{background:var(--team-b)}
+.ch.own-s::after{background:var(--shared)}
+.ch .cn{font-family:var(--font-cond);font-size:.9rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;line-height:1.2}
+.ch .co{display:inline-block;font-family:var(--font-cond);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:2px;margin-top:4px}
+.co-a{background:rgba(26,159,255,.15);color:var(--team-a)}
+.co-b{background:rgba(255,92,26,.15);color:var(--team-b)}
+.co-s{background:rgba(0,201,122,.15);color:var(--shared)}
+
+/* cells */
+.qc{background:var(--bg2);border:2px solid var(--bg4);border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .13s;position:relative;overflow:hidden;min-height:56px;gap:2px;flex:1}
+.qc:hover:not(.used):not(.locked){border-color:var(--yellow);transform:translateY(-3px);box-shadow:0 4px 0 var(--yellow)}
+.qc.used{background:var(--bg);border-color:var(--bg3);cursor:default;opacity:.4}
+.qc.locked{cursor:not-allowed;opacity:.3}
+.qc .pl{font-family:var(--font-display);font-size:1.8rem;line-height:1}
+.qc .dlabel{font-family:var(--font-cond);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.6}
+.qc.easy .pl{color:var(--easy)}.qc.easy .dlabel{color:var(--easy)}
+.qc.medium .pl{color:var(--med)}.qc.medium .dlabel{color:var(--med)}
+.qc.hard .pl{color:var(--hard)}.qc.hard .dlabel{color:var(--hard)}
+
+/* make rows fill available height */
+.board{flex:1;display:grid;gap:5px}
+.diff-row{display:contents}
+
+.end-btn-wrap{text-align:center;padding:6px 0 10px}
+.end-btn{padding:7px 24px;background:transparent;border:1px solid var(--dim2);border-radius:var(--radius);color:var(--dim);font-family:var(--font-cond);font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .15s}
+.end-btn:hover{border-color:var(--red);color:var(--red)}
+
+/* ══ GAME LOG ══ */
+.game-log{background:var(--bg2);border:2px solid var(--bg4);border-radius:var(--radius);padding:10px 14px;display:flex;flex-direction:column;gap:6px;min-height:80px;flex-shrink:0}
+.log-title{font-family:var(--font-cond);font-size:.62rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-bottom:2px}
+.log-empty{font-family:var(--font-cond);font-size:.78rem;color:var(--dim2);letter-spacing:.06em;text-transform:uppercase;text-align:center;padding:8px 0}
+.log-entry{display:flex;align-items:center;gap:8px;animation:fadeUp .2s ease}
+.log-icon{font-size:1rem;flex-shrink:0;width:20px;text-align:center}
+.log-text{font-family:var(--font-cond);font-size:.82rem;font-weight:600;letter-spacing:.03em;flex:1;line-height:1.3}
+.log-pts{font-family:var(--font-display);font-size:1rem;flex-shrink:0}
+.log-entry.correct .log-text{color:var(--easy)}
+.log-entry.correct .log-pts{color:var(--easy)}
+.log-entry.wrong .log-text{color:var(--red3)}
+.log-entry.steal .log-text{color:var(--yellow2)}
+.log-entry.steal .log-pts{color:var(--yellow2)}
+.log-entry.challenge .log-text{color:var(--yellow)}
+.log-entry.challenge .log-pts{color:var(--yellow)}
+.log-entry.skip .log-text{color:var(--dim)}
+
+/* ══ MODAL ══ */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+.mo.open{display:flex}
+.mdl{background:var(--bg2);border:3px solid var(--yellow);border-radius:var(--radius);max-width:680px;width:100%;animation:fadeUp .2s ease;max-height:92vh;overflow-y:auto;position:relative}
+
+/* modal top stripe */
+.mdl-stripe{height:5px;background:repeating-linear-gradient(90deg,var(--red) 0,var(--red) 15px,var(--yellow) 15px,var(--yellow) 30px,var(--white) 30px,var(--white) 45px);animation:marquee 1s linear infinite}
+
+.mdl-inner{padding:24px 28px 28px}
+.mclose{position:absolute;top:12px;right:12px;background:var(--bg3);border:2px solid var(--bg4);border-radius:var(--radius);color:var(--dim);font-family:var(--font-cond);font-size:.8rem;font-weight:700;letter-spacing:.06em;padding:4px 12px;cursor:pointer;transition:all .15s;z-index:10;text-transform:uppercase}
+.mclose:hover{background:var(--red);border-color:var(--red);color:var(--white)}
+
+.mhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-right:60px}
+.mmeta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.mdiff-pill{font-family:var(--font-cond);font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:3px 10px;border-radius:2px}
+.mdiff-pill.easy{background:var(--easy);color:var(--bg)}
+.mdiff-pill.medium{background:var(--med);color:var(--bg)}
+.mdiff-pill.hard{background:var(--hard);color:var(--white)}
+.mcat-lbl{font-family:var(--font-cond);font-size:.85rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--dim)}
+.mpts-lbl{font-family:var(--font-display);font-size:1.1rem;color:var(--yellow)}
+
+.ttxt{font-family:var(--font-display);font-size:2.2rem;color:var(--yellow);line-height:1}
+.ttxt.urg{animation:tPulse .5s ease-in-out infinite}
+
+.tbw{width:100%;height:4px;background:var(--bg3);margin-bottom:20px}
+.tb{height:100%;background:var(--yellow);transition:width 1s linear,background .4s}
+
+/* mode tag */
+.mode-tag{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-cond);font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:16px;padding:4px 12px;background:var(--bg3);border:1px solid var(--bg4);border-radius:2px}
+
+/* question audio player */
+.q-audio-wrap{width:100%;margin-bottom:16px;background:var(--bg3);border:2px solid var(--yellow);border-radius:var(--radius);padding:14px 18px;display:flex;align-items:center;gap:14px}
+.q-audio-icon{font-size:2rem;flex-shrink:0}
+.q-audio-info{flex:1}
+.q-audio-label{font-family:var(--font-cond);font-size:.7rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--yellow);margin-bottom:4px}
+.q-audio-hint{font-family:var(--font-cond);font-size:.82rem;color:var(--dim)}
+.q-audio-btn{padding:8px 20px;background:var(--yellow);color:var(--bg);border:none;border-radius:var(--radius);font-family:var(--font-display);font-size:1.1rem;letter-spacing:.04em;cursor:pointer;box-shadow:2px 2px 0 var(--red);transition:all .13s;flex-shrink:0}
+.q-audio-btn:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--red)}
+.q-audio-btn.playing{background:var(--red);box-shadow:2px 2px 0 #8a0010}
+
+/* question image */
+.q-img-wrap{width:100%;margin-bottom:16px;border-radius:var(--radius);overflow:hidden;border:2px solid var(--bg4);max-height:280px;display:flex;align-items:center;justify-content:center;background:var(--bg3)}
+.q-img{width:100%;max-height:280px;object-fit:cover;display:block}
+
+/* question */
+.qtxt{font-family:var(--font-cond);font-size:1.7rem;font-weight:700;line-height:1.35;color:var(--white);margin-bottom:22px}
+
+/* MCQ */
+.og{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+.ob2{background:var(--bg3);border:2px solid var(--bg4);border-radius:var(--radius);padding:11px 14px;color:var(--offwhite);font-family:var(--font-cond);font-size:.95rem;font-weight:600;cursor:pointer;text-align:left;transition:all .12s;line-height:1.3;display:flex;align-items:flex-start;gap:10px;text-transform:uppercase;letter-spacing:.02em}
+.ob2 .oletter{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:2px;background:var(--bg4);font-family:var(--font-display);font-size:.95rem;flex-shrink:0}
+.ob2:hover{background:var(--bg4);border-color:var(--yellow);color:var(--yellow)}
+.ob2:hover .oletter{background:var(--yellow);color:var(--bg)}
+.ob2.correct{background:rgba(0,201,122,.12);border-color:var(--easy);color:var(--easy)}
+.ob2.correct .oletter{background:var(--easy);color:var(--bg)}
+.ob2.wrong{background:rgba(232,25,44,.12);border-color:var(--red);color:var(--red)}
+.ob2.wrong .oletter{background:var(--red);color:var(--white)}
+
+/* answer reveal */
+.ans-reveal{display:none;background:rgba(0,201,122,.08);border:2px solid var(--easy);border-radius:var(--radius);padding:12px 16px;margin-bottom:20px}
+.ans-reveal .ans-label{font-family:var(--font-cond);font-size:.68rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--easy);margin-bottom:4px}
+.ans-reveal .ans-text{font-family:var(--font-cond);font-size:1.4rem;font-weight:700;color:var(--white)}
+.ans-reveal.vis{display:block}
+
+/* steal */
+.sbanner{background:rgba(245,200,0,.08);border:2px solid var(--yellow);border-radius:var(--radius);padding:10px 16px;margin-bottom:14px;font-family:var(--font-cond);font-size:.95rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--yellow);text-align:center;display:none}
+.sbanner.vis{display:block}
+
+/* host buttons */
+.ha{display:flex;gap:8px;flex-wrap:wrap}
+.hb{flex:1;min-width:120px;padding:12px 16px;border:none;border-radius:var(--radius);font-family:var(--font-cond);font-size:.95rem;font-weight:800;cursor:pointer;transition:all .12s;letter-spacing:.05em;text-transform:uppercase;position:relative}
+.hb.c{background:var(--easy);color:var(--bg);box-shadow:3px 3px 0 #007a4a}.hb.c:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #007a4a}
+.hb.w{background:var(--red);color:var(--white);box-shadow:3px 3px 0 #8a0010}.hb.w:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #8a0010}
+.hb.n{background:var(--bg3);border:2px solid var(--bg4);color:var(--dim)}.hb.n:hover{border-color:var(--dim);color:var(--white)}
+.hb.reveal{background:var(--yellow);color:var(--bg);box-shadow:3px 3px 0 #8a6d00}.hb.reveal:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #8a6d00}
+
+/* spinner */
+.mload{display:flex;flex-direction:column;align-items:center;gap:14px;padding:40px 0}
+.mspinner{width:38px;height:38px;border:4px solid var(--bg4);border-top-color:var(--yellow);border-radius:50%;animation:spin .7s linear infinite}
+.mload p{font-family:var(--font-cond);font-size:.9rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+
+/* challenge wildcard cell */
+.qc.challenge{background:linear-gradient(135deg,#1a0a00,#3d1800);border:2px solid var(--yellow);animation:cPulse 2s ease-in-out infinite}
+@keyframes cPulse{0%,100%{border-color:var(--yellow);box-shadow:0 0 0 0 rgba(245,200,0,.4)}50%{border-color:var(--yellow2);box-shadow:0 0 12px 4px rgba(245,200,0,.2)}}
+.qc.challenge .pl{font-size:1.6rem}
+.qc.challenge .dlabel{color:var(--yellow);opacity:1;font-size:.65rem}
+
+/* ══ CHALLENGE / BETTING MODAL ══ */
+.cmo{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:300;display:none;align-items:center;justify-content:center;padding:16px}
+.cmo.open{display:flex}
+.cmdl{background:var(--bg2);border:4px solid var(--yellow);border-radius:var(--radius);max-width:700px;width:100%;animation:fadeUp .25s ease;position:relative;overflow:hidden}
+.cmdl-stripe{height:6px;background:repeating-linear-gradient(90deg,var(--red) 0,var(--red) 15px,var(--yellow) 15px,var(--yellow) 30px,var(--white) 30px,var(--white) 45px);animation:marquee 1s linear infinite}
+.cmdl-inner{padding:28px 32px 32px}
+
+/* phase: reveal */
+.ch-reveal{text-align:center;padding:12px 0 24px}
+.ch-icon{font-size:4rem;display:block;margin-bottom:8px}
+.ch-label{font-family:var(--font-display);font-size:1rem;letter-spacing:.2em;color:var(--yellow);margin-bottom:4px}
+.ch-title{font-family:var(--font-display);font-size:3rem;color:var(--white);line-height:1.1;margin-bottom:8px}
+.ch-desc{font-family:var(--font-cond);font-size:1.1rem;color:var(--dim);line-height:1.4}
+
+/* phase: bidding */
+.bid-area{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+.bid-card{background:var(--bg3);border:2px solid var(--bg4);border-radius:var(--radius);padding:16px;text-align:center}
+.bid-card .bname{font-family:var(--font-cond);font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.bid-card .bnum{font-family:var(--font-display);font-size:3.5rem;line-height:1;margin-bottom:10px}
+.bid-card.ba .bnum{color:var(--team-a)}.bid-card.bb .bnum{color:var(--team-b)}
+.bid-card.active-bid{border-color:var(--yellow);background:rgba(245,200,0,.05)}
+.bid-card.winner-bid{border-color:var(--yellow);background:rgba(245,200,0,.08);box-shadow:0 0 20px rgba(245,200,0,.2)}
+.bid-btns{display:flex;gap:8px;justify-content:center}
+.bid-btn{padding:8px 20px;font-family:var(--font-display);font-size:1.2rem;border:none;border-radius:var(--radius);cursor:pointer;transition:all .12s}
+.bid-btn.up{background:var(--yellow);color:var(--bg);box-shadow:2px 2px 0 #8a6d00}.bid-btn.up:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 #8a6d00}
+.bid-btn.pass{background:var(--bg4);color:var(--dim);border:2px solid var(--bg4)}.bid-btn.pass:hover{border-color:var(--dim);color:var(--white)}
+.bid-btn:disabled{opacity:.3;pointer-events:none}
+.bid-status{font-family:var(--font-cond);font-size:.9rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;color:var(--yellow);margin-bottom:8px;min-height:1.4em}
+.bid-turn-indicator{font-family:var(--font-cond);font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-align:center;color:var(--dim);margin-bottom:16px}
+
+/* phase: countdown */
+.ctimer-wrap{text-align:center;padding:8px 0 20px}
+.ctimer-num{font-family:var(--font-display);font-size:7rem;line-height:1;color:var(--yellow)}
+.ctimer-num.urg{color:var(--red);animation:tPulse .4s ease-in-out infinite}
+.ctimer-bar-w{width:100%;height:8px;background:var(--bg3);border-radius:4px;margin:8px 0 20px}
+.ctimer-bar{height:100%;border-radius:4px;background:var(--yellow);transition:width 1s linear,background .4s}
+.ctimer-team{font-family:var(--font-cond);font-size:1rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.ctimer-target{font-family:var(--font-display);font-size:1.8rem;color:var(--white);margin-bottom:16px}
+.start-timer-btn{display:block;width:100%;padding:16px;background:var(--yellow);color:var(--bg);font-family:var(--font-display);font-size:2rem;letter-spacing:.06em;border:none;border-radius:var(--radius);cursor:pointer;box-shadow:4px 4px 0 var(--red);transition:all .15s;margin-bottom:16px}
+.start-timer-btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--red)}
+.start-timer-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:2px 2px 0 var(--dim2)}
+
+/* ══ RESULT POPUP ══ */
+.rpop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:500;pointer-events:none;background:var(--bg);border-radius:var(--radius);padding:28px 56px;text-align:center;min-width:280px;display:none}
+.rpop.show{display:block;animation:popIn .3s cubic-bezier(.34,1.56,.64,1) forwards}
+.rpop.hide{display:block;animation:popOut .22s ease forwards}
+.rpop .ricon{font-family:var(--font-display);font-size:4rem;display:block;margin-bottom:6px;line-height:1}
+.rpop .rteam{font-family:var(--font-display);font-size:2.2rem;letter-spacing:.04em;margin-bottom:4px}
+.rpop .rlabel{font-family:var(--font-cond);font-size:.8rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+.rpop.cp2{border:4px solid var(--easy);box-shadow:0 0 40px rgba(0,201,122,.4),8px 8px 0 #007a4a}
+.rpop.wp2{border:4px solid var(--red);box-shadow:0 0 40px rgba(232,25,44,.4),8px 8px 0 #8a0010}
+.rpop.sp2{border:4px solid var(--yellow);box-shadow:0 0 40px rgba(245,200,0,.4),8px 8px 0 #8a6d00}
+
+/* ══ WIN ══ */
+#win{min-height:100vh;display:none;flex-direction:column}
+#win.active{display:flex}
+.win-inner{flex:1;display:flex;align-items:center;justify-content:center;padding:24px}
+.wb{background:var(--bg2);border:4px solid var(--yellow);border-radius:var(--radius);padding:48px 56px;max-width:560px;width:100%;text-align:center;animation:fadeUp .4s ease;box-shadow:8px 8px 0 var(--red)}
+.wi{font-size:5rem;display:block;margin-bottom:8px}
+.wt{font-family:var(--font-display);font-size:3.5rem;letter-spacing:.04em;color:var(--yellow);margin-bottom:4px;text-shadow:3px 3px 0 var(--red)}
+.ws{font-family:var(--font-cond);font-size:.8rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-bottom:32px}
+.fs{display:flex;gap:20px;justify-content:center;margin-bottom:32px}
+.fc{background:var(--bg3);border:2px solid var(--bg4);border-radius:var(--radius);padding:20px 32px;min-width:130px}
+.fc .fn{font-family:var(--font-cond);font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.fc .fp{font-family:var(--font-display);font-size:3.2rem}
+.fc.win2{border-color:var(--yellow);background:rgba(245,200,0,.07);box-shadow:4px 4px 0 var(--yellow)}
+.pa{padding:14px 40px;background:var(--yellow);color:var(--bg);font-family:var(--font-display);font-size:1.6rem;letter-spacing:.04em;border:none;border-radius:var(--radius);cursor:pointer;transition:all .15s;box-shadow:4px 4px 0 var(--red)}
+.pa:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--red)}
+.cp3{position:fixed;width:10px;height:14px;border-radius:2px;top:-20px;animation:fall linear forwards;pointer-events:none;z-index:999}
+
+/* ══ QUESTION EDITOR ══ */
+#editor{min-height:100vh;display:flex;flex-direction:column}
+#editor.active{display:flex}
+.editor-inner{flex:1;padding:24px;max-width:1000px;margin:0 auto;width:100%}
+.editor-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.editor-header h2{font-family:var(--font-display);font-size:2.4rem;color:var(--yellow);letter-spacing:.04em;text-shadow:3px 3px 0 var(--red)}
+.editor-sub{font-family:var(--font-cond);font-size:.82rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-top:4px}
+.editor-actions{display:flex;gap:10px;align-items:center}
+.skip-btn{padding:10px 28px;background:transparent;border:2px solid var(--dim2);border-radius:var(--radius);color:var(--dim);font-family:var(--font-cond);font-size:.9rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .15s}
+.skip-btn:hover{border-color:var(--white);color:var(--white)}
+.play-btn{padding:10px 28px;background:var(--yellow);color:var(--bg);border:none;border-radius:var(--radius);font-family:var(--font-display);font-size:1.4rem;letter-spacing:.04em;cursor:pointer;box-shadow:3px 3px 0 var(--red);transition:all .15s}
+.play-btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--red)}
+
+/* cat tabs */
+.cat-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.cat-tab{padding:6px 14px;background:var(--bg3);border:2px solid var(--bg4);border-radius:var(--radius);font-family:var(--font-cond);font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .13s;color:var(--dim)}
+.cat-tab:hover{border-color:var(--dim);color:var(--white)}
+.cat-tab.active-tab{background:var(--yellow);color:var(--bg);border-color:var(--yellow);box-shadow:2px 2px 0 var(--red)}
+
+/* diff tabs */
+.diff-tabs{display:flex;gap:6px;margin-bottom:16px}
+.diff-tab{flex:1;padding:7px;background:var(--bg3);border:2px solid var(--bg4);border-radius:var(--radius);font-family:var(--font-cond);font-size:.82rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .13s;color:var(--dim);text-align:center}
+.diff-tab.dt-easy.active-diff{background:var(--easy);color:var(--bg);border-color:var(--easy)}
+.diff-tab.dt-medium.active-diff{background:var(--med);color:var(--bg);border-color:var(--med)}
+.diff-tab.dt-hard.active-diff{background:var(--hard);color:var(--white);border-color:var(--hard)}
+
+/* question list */
+.q-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;min-height:40px}
+.q-item{background:var(--bg2);border:2px solid var(--bg4);border-radius:var(--radius);padding:12px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;animation:fadeUp .15s ease}
+.q-item-text{flex:1}
+.q-item-q{font-family:var(--font-cond);font-size:.95rem;font-weight:700;color:var(--white);margin-bottom:3px}
+.q-item-ans{font-family:var(--font-cond);font-size:.8rem;color:var(--easy)}
+.q-item-wrong{font-family:var(--font-cond);font-size:.78rem;color:var(--dim);margin-top:2px}
+.q-del{background:transparent;border:1px solid var(--dim2);border-radius:4px;color:var(--dim);font-size:.75rem;padding:3px 8px;cursor:pointer;transition:all .12s;flex-shrink:0;font-family:var(--font-cond);font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.q-del:hover{background:var(--red);border-color:var(--red);color:var(--white)}
+.q-empty{font-family:var(--font-cond);font-size:.82rem;color:var(--dim2);text-align:center;padding:16px 0;letter-spacing:.06em;text-transform:uppercase}
+
+/* add question form */
+.add-form{background:var(--bg2);border:2px solid var(--bg4);border-radius:var(--radius);padding:18px}
+.add-form-title{font-family:var(--font-cond);font-size:.72rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--yellow);margin-bottom:14px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.form-row.single{grid-template-columns:1fr}
+.form-field{display:flex;flex-direction:column;gap:4px}
+.form-field label{font-family:var(--font-cond);font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.form-field input{background:var(--bg3);border:2px solid var(--bg4);border-radius:var(--radius);padding:8px 11px;color:var(--white);font-family:var(--font-body);font-size:.88rem;outline:none;transition:border-color .15s}
+.form-field input:focus{border-color:var(--yellow)}
+.form-field input.correct-inp{border-color:rgba(0,201,122,.3)}
+.form-field input.correct-inp:focus{border-color:var(--easy)}
+.wrong-fields{display:none;margin-bottom:10px}
+.wrong-fields.show{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.wrong-note{font-family:var(--font-cond);font-size:.72rem;color:var(--dim);letter-spacing:.05em;margin-bottom:8px}
+.add-q-btn{width:100%;padding:11px;background:var(--red);color:var(--white);border:none;border-radius:var(--radius);font-family:var(--font-display);font-size:1.4rem;letter-spacing:.06em;cursor:pointer;box-shadow:3px 3px 0 #8a0010;transition:all .15s;margin-top:4px}
+.add-q-btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 #8a0010}
+.total-counter{font-family:var(--font-cond);font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);text-align:right;margin-top:8px}
+.total-counter span{color:var(--yellow)}
+
+@media(max-width:580px){
+  .sr{grid-template-columns:1fr}.csg{grid-template-columns:1fr 1fr}
+  .og{grid-template-columns:1fr}.fs{flex-direction:column;align-items:center}.wb{padding:28px 20px}
+  .sh h1{font-size:3.5rem}.form-row{grid-template-columns:1fr}.wrong-fields.show{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Result popup -->
+<div class="rpop" id="rpop">
+  <span class="ricon" id="ricon"></span>
+  <div class="rteam" id="rteam"></div>
+  <div class="rlabel" id="rlabel"></div>
+</div>
+
+<!-- SETUP -->
+<div class="screen active" id="setup">
+  <div class="stripe"></div>
+  <div class="setup-inner">
+    <div class="sh">
+      
+      <h1>TRIVIA<br>SHOWDOWN</h1>
+      <p>Pick your categories and battle it out</p>
+    </div>
+    <div class="sc">
+      <div class="sr">
+        <div class="card card-a">
+          <h3><span class="badge" style="background:var(--team-a)"></span>Team A</h3>
+          <div class="ig"><label>Team Name</label><input id="nA" type="text" placeholder="e.g. The Scholars" maxlength="20"/></div>
+          <div class="ig" style="margin-bottom:0"><label>Pick 2 exclusive categories</label><div class="cscroll" id="cA"></div><div class="sc-cnt" id="cnA">0 / 2 selected</div></div>
+        </div>
+        <div class="card card-b">
+          <h3><span class="badge" style="background:var(--team-b)"></span>Team B</h3>
+          <div class="ig"><label>Team Name</label><input id="nB" type="text" placeholder="e.g. The Wizards" maxlength="20"/></div>
+          <div class="ig" style="margin-bottom:0"><label>Pick 2 exclusive categories</label><div class="cscroll" id="cB"></div><div class="sc-cnt" id="cnB">0 / 2 selected</div></div>
+        </div>
+      </div>
+      <div class="card card-s">
+        <h3><span class="badge" style="background:var(--shared)"></span>Shared Categories <span style="font-weight:400;font-size:.85rem;color:var(--dim);margin-left:6px;text-transform:none;letter-spacing:0">· both teams can pick</span></h3>
+        <div class="ig" style="margin-bottom:0"><label>Pick 2 shared categories</label><div class="csg" id="cS"></div><div class="sc-cnt" id="cnS">0 / 2 selected</div></div>
+      </div>
+      <div class="sw"><button class="sbtn" id="startBtn" onclick="startGame()">NEXT →</button></div>
+    </div>
+  </div>
+  <div class="stripe"></div>
+</div>
+
+<!-- GAME -->
+<div class="screen" id="game">
+  <div class="stripe"></div>
+  <div class="scoreboard">
+    <div class="tscore a" id="scA"><span class="tn" id="lA">Team A</span><span class="pts" id="pA">0</span></div>
+    <div class="tmid">
+      <div class="show-title">TRIVIA SHOWDOWN</div>
+      <div class="tl">Now Playing</div>
+      <div class="tn2" id="turnLbl" style="color:var(--team-a)">–</div>
+    </div>
+    <div class="tscore b" id="scB"><span class="tn" id="lB">Team B</span><span class="pts" id="pB">0</span></div>
+  </div>
+  <div class="board-wrap">
+    <div class="board" id="board"></div>
+    <div class="game-log" id="gameLog">
+      <div class="log-title">📋 Live Game Log</div>
+      <div class="log-empty" id="logEmpty">Game hasn't started yet — make your first pick!</div>
+    </div>
+    <div class="end-btn-wrap"><button class="end-btn" onclick="endGame()">End Game &amp; See Results</button></div>
+  </div>
+</div>
+
+<!-- WIN -->
+<div class="screen" id="win">
+  <div class="stripe"></div>
+  <div class="win-inner">
+    <div class="wb">
+      <span class="wi">🏆</span>
+      <h1 class="wt" id="wName">–</h1>
+      <p class="ws" id="wSub">–</p>
+      <div class="fs">
+        <div class="fc" id="fA"><div class="fn" id="fnA">Team A</div><div class="fp" id="fpA" style="color:var(--team-a)">0</div></div>
+        <div class="fc" id="fB"><div class="fn" id="fnB">Team B</div><div class="fp" id="fpB" style="color:var(--team-b)">0</div></div>
+      </div>
+      <button class="pa" onclick="playAgain()">PLAY AGAIN</button>
+    </div>
+  </div>
+  <div class="stripe"></div>
+</div>
+
+<!-- MODAL -->
+<div class="mo" id="modal">
+  <div class="mdl">
+    <div class="mdl-stripe"></div>
+    <div class="mdl-inner">
+      <button class="mclose" id="mCloseBtn" onclick="closeQ(false)">✕ Close</button>
+      <div class="mhead">
+        <div class="mmeta">
+          <span class="mdiff-pill" id="mDiffPill">Easy</span>
+          <span class="mcat-lbl" id="mCat">–</span>
+          <span class="mpts-lbl" id="mPts">–</span>
+        </div>
+        <div class="ttxt" id="tTxt">–</div>
+      </div>
+      <div class="tbw"><div class="tb" id="tbar"></div></div>
+      <div id="mBody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CHALLENGE / BETTING MODAL -->
+<div class="cmo" id="cModal">
+  <div class="cmdl">
+    <div class="cmdl-stripe"></div>
+    <div class="cmdl-inner" id="cBody"></div>
+  </div>
+</div>
+
+<!-- QUESTION EDITOR -->
+<div class="screen" id="editor">
+  <div class="stripe"></div>
+  <div class="editor-inner">
+    <div class="editor-header">
+      <div>
+        <h2>ADD YOUR QUESTIONS</h2>
+        <div class="editor-sub">Optional — your questions go first, API fills the rest</div>
+      </div>
+      <div class="editor-actions">
+        <button class="play-btn" onclick="launchGame()">LET'S PLAY ▶</button>
+      </div>
+    </div>
+
+    <!-- category tabs -->
+    <div class="cat-tabs" id="edCatTabs"></div>
+
+    <!-- difficulty tabs -->
+    <div class="diff-tabs">
+      <button class="diff-tab dt-easy active-diff" onclick="setEdDiff('easy',this)">🟢 Easy — MCQ</button>
+      <button class="diff-tab dt-medium" onclick="setEdDiff('medium',this)">🟡 Medium — Open</button>
+      <button class="diff-tab dt-hard" onclick="setEdDiff('hard',this)">🔴 Hard — Open</button>
+    </div>
+
+    <!-- existing questions list -->
+    <div class="q-list" id="edQList"></div>
+
+    <!-- add form -->
+    <div class="add-form">
+      <div class="add-form-title" id="edFormTitle">+ ADD EASY QUESTION (MULTIPLE CHOICE)</div>
+      <div class="form-row single">
+        <div class="form-field">
+          <label>Question</label>
+          <input id="edQ" type="text" placeholder="e.g. How many players are on a football team?"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>✓ Correct Answer</label>
+          <input id="edAns" type="text" placeholder="e.g. 11" class="correct-inp"/>
+        </div>
+        <div class="form-field" id="edWrongWrap1" style="display:none">
+          <label>✗ Wrong Option 1</label>
+          <input id="edW1" type="text" placeholder="e.g. 10"/>
+        </div>
+      </div>
+      <div class="wrong-fields" id="edWrongFields">
+        <div class="form-field">
+          <label>✗ Wrong Option 2</label>
+          <input id="edW2" type="text" placeholder="e.g. 9"/>
+        </div>
+        <div class="form-field">
+          <label>✗ Wrong Option 3</label>
+          <input id="edW3" type="text" placeholder="e.g. 12"/>
+        </div>
+      </div>
+      <button class="add-q-btn" onclick="addCustomQ()">+ ADD QUESTION</button>
+    </div>
+    <div class="total-counter" id="edTotal">Total custom questions: <span>0</span></div>
+  </div>
+  <div class="stripe"></div>
+</div>
+
+<script>
+// ── EDITOR STATE ── (functions defined after main game vars below)
+let edCat=null;
+let edDiff='easy';
+
+// Category types: 'api' = fetches from OpenTDB, 'custom' = JSON/editor only
+const CATS=[
+  {id:21,  name:"Sports",          icon:"⚽", type:"api"},
+  {id:22,  name:"Geography",       icon:"🌍", type:"api"},
+  {id:9,   name:"General Knowledge",icon:"🧠",type:"api"},
+  {id:23,  name:"History",         icon:"🏛️", type:"api"},
+  {id:17,  name:"Science",         icon:"🔬", type:"api"},
+  {id:101, name:"Who's the Player",icon:"🏟️", type:"custom"},
+  {id:102, name:"Jordan",          icon:"🇯🇴", type:"custom"},
+  {id:103, name:"Boxing",          icon:"🥊", type:"custom"},
+  {id:104, name:"Guess the Song",  icon:"🎵", type:"custom"},
+];
+const DIFF_TYPE={easy:'mcq',medium:'open',hard:'open'};
+const BANK={};
+const CUSTOM_BANK={}; // custom questions added by host, keyed "catId-diff"
+let G={
+  tA:{name:'Team A',cats:[],score:0},tB:{name:'Team B',cats:[],score:0},
+  shared:[],active:'A',used:{},totalCells:0,
+  curQ:null,timerInt:null,timerSec:60,
+  phase:'answer',pendPts:0,pendKey:'',pendDiff:'',pendCat:''
+};
+let selA=[],selB=[],selS=[];
+
+function buildPickers(){
+  ['cA','cB','cS'].forEach(id=>{
+    const el=document.getElementById(id);el.innerHTML='';
+    CATS.forEach(c=>{
+      const b=document.createElement('button');
+      b.className='cb';
+      b.dataset.id=c.id;
+      b.innerHTML=`<span class="cicon">${c.icon}</span><span>${c.name}</span>`;
+      b.onclick=()=>tog(c,id,b);
+      el.appendChild(b);
+    });
+  });
+}
+buildPickers();
+
+function tog(cat,panel,btn){
+  const arr=panel==='cA'?selA:panel==='cB'?selB:selS;
+  const cls=panel==='cA'?'sa':panel==='cB'?'sb':'ss';
+  const idx=arr.findIndex(x=>x.id===cat.id);
+  if(idx>-1){arr.splice(idx,1);btn.classList.remove(cls);}
+  else{
+    if(arr.length>=2)return;
+    if([...selA,...selB,...selS].find(x=>x.id===cat.id))return;
+    arr.push(cat);btn.classList.add(cls);
+  }
+  updCnt();refDis();valStart();
+}
+function updCnt(){
+  ['A','B','S'].forEach(x=>{const arr=x==='A'?selA:x==='B'?selB:selS;document.getElementById('cn'+x).textContent=`${arr.length} / 2 selected`;});
+}
+function refDis(){
+  ['cA','cB','cS'].forEach(pid=>{
+    document.getElementById(pid).querySelectorAll('.cb').forEach(b=>{
+      const id=+b.dataset.id;
+      const ow=selA.find(x=>x.id===id)?'cA':selB.find(x=>x.id===id)?'cB':selS.find(x=>x.id===id)?'cS':null;
+      b.classList.toggle('dis',!!ow&&ow!==pid);
+    });
+  });
+}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+function valStart(){} // no longer disables button
+document.getElementById('nA').oninput=valStart;
+document.getElementById('nB').oninput=valStart;
+
+function startGame(){
+  const nameA=document.getElementById('nA').value.trim();
+  const nameB=document.getElementById('nB').value.trim();
+  if(!nameA||!nameB){showToast('⚠️ Enter both team names first!');return;}
+  if(selA.length<2){showToast(`⚠️ ${nameA} needs 2 categories!`);return;}
+  if(selB.length<2){showToast(`⚠️ ${nameB} needs 2 categories!`);return;}
+  if(selS.length<2){showToast('⚠️ Pick 2 shared categories!');return;}
+  G.tA.name=nameA;G.tB.name=nameB;
+  G.tA.cats=[...selA];G.tB.cats=[...selB];G.shared=[...selS];
+  G.tA.score=0;G.tB.score=0;G.used={};G.active='A';
+  G.challengeKeys=null;
+  G.totalCells=[...G.tA.cats,...G.tB.cats,...G.shared].length*3;
+  showScreen('editor');
+  renderEditor();
+  setTimeout(()=>{
+    const el=document.getElementById('editor');
+    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+  },50);
+}
+
+function launchGame(){
+  // hide editor screen completely so it doesn't show during the game
+  const edScreen=document.getElementById('editor');
+  if(edScreen)edScreen.style.display='none';
+  // reset log
+  const log=document.getElementById('gameLog');
+  if(log){log.innerHTML='<div class="log-title">📋 Live Game Log</div><div class="log-empty" id="logEmpty">Game hasn\'t started yet — make your first pick!</div>';}
+  showScreen('game');renderBoard();updScore();
+}
+
+async function getQuestion(catId,diff){
+  const key=`${catId}-${diff}`;
+  // custom questions first (always)
+  if(CUSTOM_BANK[key]&&CUSTOM_BANK[key].length>0)return CUSTOM_BANK[key].shift();
+  // custom-only categories (id >= 100) don't use API
+  if(catId>=100)return null;
+  // API fallback for OpenTDB categories
+  if(BANK[key]&&BANK[key].length>0)return BANK[key].shift();
+  const url=`https://opentdb.com/api.php?amount=5&category=${catId}&difficulty=${diff}&type=multiple&encode=url3986`;
+  try{
+    const r=await fetch(url);const d=await r.json();
+    if(!d||!d.results||d.results.length===0)return null;
+    BANK[key]=d.results.map(q=>({
+      question:decodeURIComponent(q.question),
+      correct:decodeURIComponent(q.correct_answer),
+      options:shuffle([decodeURIComponent(q.correct_answer),...q.incorrect_answers.map(a=>decodeURIComponent(a))])
+    }));
+    return BANK[key].shift();
+  }catch{return null;}
+}
+function shuffle(a){return a.sort(()=>Math.random()-.5);}
+
+function ownerOf(id){
+  if(G.tA.cats.find(c=>c.id===id))return'A';
+  if(G.tB.cats.find(c=>c.id===id))return'B';
+  return'S';
+}
+
+function renderBoard(){
+  const board=document.getElementById('board');
+  const cats=[...G.tA.cats,...G.tB.cats,...G.shared];
+  board.style.gridTemplateColumns=`repeat(${cats.length},1fr)`;
+  board.innerHTML='';
+  cats.forEach(cat=>{
+    const ow=ownerOf(cat.id);
+    const oN=ow==='A'?G.tA.name:ow==='B'?G.tB.name:'Shared';
+    const chCls=ow==='A'?'own-a':ow==='B'?'own-b':'own-s';
+    const coCls=ow==='A'?'co-a':ow==='B'?'co-b':'co-s';
+    const oCol=ow==='A'?'var(--team-a)':ow==='B'?'var(--team-b)':'var(--shared)';
+    const h=document.createElement('div');h.className=`ch ${chCls}`;
+    h.innerHTML=`<div class="cn" style="color:${oCol}">${cat.name}</div><div class="co ${coCls}">${oN}</div>`;
+    board.appendChild(h);
+  });
+
+  // Randomly pick 2 cells to be challenge cells (one from medium row, one from hard row)
+  // stored in G.challengeKeys so they persist across re-renders
+  if(!G.challengeKeys){
+    const medCats=shuffle([...cats]);
+    const hardCats=shuffle([...cats]);
+    G.challengeKeys=new Set([
+      `${medCats[0].id}-medium`,
+      `${hardCats[1%hardCats.length].id}-hard`
+    ]);
+  }
+
+  [{k:'easy',l:'Easy',p:1},{k:'medium',l:'Medium',p:2},{k:'hard',l:'Hard',p:3}].forEach(d=>{
+    cats.forEach(cat=>{
+      const key=`${cat.id}-${d.k}`;
+      const used=G.used[key];const ow=ownerOf(cat.id);const can=ow==='S'||ow===G.active;
+      const isChallenge=G.challengeKeys&&G.challengeKeys.has(key)&&!used;
+      const cell=document.createElement('div');
+      cell.className=`qc ${d.k}${used?' used':''}${(!used&&!can)?' locked':''}${isChallenge?' challenge':''}`;
+      cell.id=`c-${key}`;
+      if(!used){
+        if(isChallenge){
+          cell.innerHTML=`<span class="pl">⚡</span><span class="dlabel">CHALLENGE</span>`;
+          if(can)cell.onclick=()=>openChallenge(key,d.p);
+        } else {
+          cell.innerHTML=`<span class="pl">${d.p}</span><span class="dlabel">${d.l}</span>`;
+          if(can)cell.onclick=()=>openQ(cat,d.k,d.p,key);
+        }
+      }
+      board.appendChild(cell);
+    });
+  });
+}
+
+function updLocks(){
+  const cats=[...G.tA.cats,...G.tB.cats,...G.shared];
+  [{k:'easy',p:1},{k:'medium',p:2},{k:'hard',p:3}].forEach(d=>{
+    cats.forEach(cat=>{
+      const key=`${cat.id}-${d.k}`;if(G.used[key])return;
+      const cell=document.getElementById(`c-${key}`);if(!cell)return;
+      const ow=ownerOf(cat.id);const can=ow==='S'||ow===G.active;
+      cell.classList.toggle('locked',!can);
+      const isChallenge=G.challengeKeys&&G.challengeKeys.has(key);
+      cell.onclick=can?(isChallenge?()=>openChallenge(key,d.p):()=>openQ(cat,d.k,d.p,key)):null;
+    });
+  });
+}
+
+async function openQ(cat,diff,pts,key){
+  G.pendPts=pts;G.pendKey=key;G.phase='answer';G.pendDiff=diff;
+  G.pendCat=cat.name;
+  const pill=document.getElementById('mDiffPill');
+  pill.textContent=diff.charAt(0).toUpperCase()+diff.slice(1);
+  pill.className=`mdiff-pill ${diff}`;
+  document.getElementById('mCat').textContent=cat.name;
+  document.getElementById('mPts').textContent=`${pts} PT${pts>1?'S':''}`;
+  document.getElementById('tTxt').textContent='–';
+  document.getElementById('tTxt').classList.remove('urg');
+  document.getElementById('tbar').style.cssText='width:100%;background:var(--yellow)';
+  document.getElementById('mBody').innerHTML=`<div class="mload"><div class="mspinner"></div><p>Loading Question...</p></div>`;
+  document.getElementById('modal').classList.add('open');
+
+  const q=await getQuestion(cat.id,diff);
+  if(!q){
+    // silent skip — mark used, keep turn
+    document.getElementById('modal').classList.remove('open');
+    document.getElementById('mBody').innerHTML='';
+    G.used[key]=true;
+    const cell=document.getElementById(`c-${key}`);
+    if(cell){cell.classList.add('used');cell.classList.remove('locked');cell.innerHTML='';cell.onclick=null;}
+    updLocks();
+    if(Object.keys(G.used).length>=G.totalCells)endGame();
+    return;
+  }
+
+  G.curQ=q;
+  // stop any playing audio from previous question
+  stopAudio();
+
+  const isMCQ=DIFF_TYPE[diff]==='mcq' && !q.audio; // song questions are always open
+  const isSong=!!q.audio;
+  const modeLabel=isSong?'Guess the Song + Artist':diff==='easy'?'Multiple Choice':'Verbal Answer';
+  const modeIcon=isSong?'🎵':diff==='easy'?'🔤':diff==='medium'?'🗣️':'🎯';
+
+  // hide close button for song questions — no takebacks
+  const closeBtn=document.getElementById('mCloseBtn');
+  if(closeBtn)closeBtn.style.display=isSong?'none':'';
+
+  let html=`<div class="mode-tag"><span>${modeIcon}</span>${modeLabel}</div>`;
+
+  // audio player for song questions
+  if(isSong){
+    html+=`<div class="q-audio-wrap">
+      <span class="q-audio-icon">🎵</span>
+      <div class="q-audio-info">
+        <div class="q-audio-label">Now Playing</div>
+        <div class="q-audio-hint">Listen carefully — name the song AND artist!</div>
+      </div>
+      <button class="q-audio-btn" id="audioPlayBtn" onclick="toggleAudio('${q.audio}')">▶ PLAY</button>
+    </div>`;
+  }
+
+  // image for picture questions
+  if(q.image){
+    html+=`<div class="q-img-wrap"><img class="q-img" src="${q.image}" alt="Question image" onerror="this.onerror=null;this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%5C%22http%3A//www.w3.org/2000/svg%5C%22%20width%3D%5C%22280%5C%22%20height%3D%5C%22280%5C%22%3E%3Crect%20width%3D%5C%22100%25%5C%22%20height%3D%5C%22100%25%5C%22%20fill%3D%5C%22%23222%5C%22/%3E%3Ctext%20x%3D%5C%2250%25%5C%22%20y%3D%5C%2250%25%5C%22%20dominant-baseline%3D%5C%22middle%5C%22%20text-anchor%3D%5C%22middle%5C%22%20font-family%3D%5C%22system-ui%5C%22%20font-size%3D%5C%2220%5C%22%20fill%3D%5C%22%23fff%5C%22%3ENo%20image%3C/text%3E%3C/svg%3E';"/></div>`;
+  }
+
+  html+=`<p class="qtxt" id="qTxt"></p>`;
+  if(isMCQ&&q.options)html+=`<div class="og" id="og"></div>`;
+  html+=`<div class="ans-reveal" id="ansReveal"><div class="ans-label">Correct Answer</div><div class="ans-text" id="ansText"></div></div>`;
+  html+=`<div class="sbanner" id="sb"></div>`;
+  html+=`<div class="ha" id="ha"></div>`;
+  document.getElementById('mBody').innerHTML=html;
+  document.getElementById('qTxt').textContent=q.question||'';
+  document.getElementById('ansText').textContent=q.correct;
+
+  if(isMCQ&&q.options){
+    const og=document.getElementById('og');
+    q.options.forEach((opt,i)=>{
+      const b=document.createElement('button');b.className='ob2';
+      b.innerHTML=`<span class="oletter">${['A','B','C','D'][i]}</span><span>${opt}</span>`;
+      b.onclick=()=>revAns(b,opt,q.correct);
+      og.appendChild(b);
+    });
+    renderHA('answering-mcq');
+  } else {
+    renderHA('answering-open');
+  }
+  // auto-play audio for song questions, use longer timer
+  if(isSong){
+    setTimeout(()=>toggleAudio(q.audio),400);
+    startTimer(90);
+  } else {
+    startTimer(60);
+  }
+}
+
+function revAns(btn,chosen,correct){
+  stopTimer();
+  document.querySelectorAll('.ob2').forEach(b=>{
+    const txt=b.querySelector('span:last-child').textContent;
+    if(txt===correct)b.classList.add('correct');
+    else if(b===btn&&chosen!==correct)b.classList.add('wrong');
+    b.onclick=null;
+  });
+  document.getElementById('ansReveal').classList.add('vis');
+  renderHA('revealed');
+}
+function revAll(){
+  if(!G.curQ)return;
+  const og=document.getElementById('og');
+  if(og){og.querySelectorAll('.ob2').forEach(b=>{if(b.querySelector('span:last-child').textContent===G.curQ.correct)b.classList.add('correct');b.onclick=null;});}
+  const ar=document.getElementById('ansReveal');if(ar)ar.classList.add('vis');
+}
+
+function startTimer(duration=60){
+  G.timerSec=duration;
+  document.getElementById('tbar').style.cssText='width:100%;background:var(--yellow)';
+  document.getElementById('tTxt').textContent=duration;
+  document.getElementById('tTxt').classList.remove('urg');
+  clearInterval(G.timerInt);
+  G.timerInt=setInterval(()=>{
+    G.timerSec--;
+    const p=Math.max(0,(G.timerSec/duration)*100);
+    document.getElementById('tbar').style.width=p+'%';
+    document.getElementById('tTxt').textContent=G.timerSec;
+    if(G.timerSec<=10){document.getElementById('tbar').style.background='var(--red)';document.getElementById('tTxt').classList.add('urg');boop();}
+    if(G.timerSec<=0){stopTimer();revAll();renderHA('revealed');}
+  },1000);
+}
+function stopTimer(){clearInterval(G.timerInt);}
+
+function renderHA(phase){
+  const ha=document.getElementById('ha');if(!ha)return;ha.innerHTML='';
+  const other=G.active==='A'?'B':'A';
+  const oName=other==='A'?G.tA.name:G.tB.name;
+  if(phase==='answering-mcq'){ha.appendChild(mk('Reveal Answer','reveal',()=>{stopTimer();revAll();renderHA('revealed');}));return;}
+  if(phase==='answering-open'){ha.appendChild(mk('Reveal Answer','reveal',()=>{stopTimer();revAll();renderHA('revealed');}));return;}
+  if(G.phase==='answer'){
+    ha.appendChild(mk('✓ Correct','c',()=>award(G.active,G.pendPts,false)));
+    ha.appendChild(mk('✗ Wrong → Steal?','w',()=>activateSteal(oName)));
+    ha.appendChild(mk('Skip','n',()=>{
+      const tName=G.active==='A'?G.tA.name:G.tB.name;
+      addLog('skip',`${tName} skipped ${G.pendCat||''} ${G.pendDiff||''}`);
+      closeQ(true);
+    }));
+  } else {
+    ha.appendChild(mk(`✓ Steal — ${oName}`,'c',()=>award(other,G.pendPts,true)));
+    ha.appendChild(mk('✗ No Steal','w',()=>{
+      const tName=G.active==='A'?G.tA.name:G.tB.name;
+      addLog('wrong',`${tName} got it wrong — no steal either`);
+      showPop('wrong',G.active,false);closeQ(true);
+    }));
+  }
+}
+function mk(lbl,cls,fn){const b=document.createElement('button');b.className=`hb ${cls}`;b.textContent=lbl;b.onclick=fn;return b;}
+
+function activateSteal(name){
+  G.phase='steal';
+  const tName=G.active==='A'?G.tA.name:G.tB.name;
+  addLog('wrong',`${tName} got it wrong — ${name} can steal!`);
+  showPop('wrong',G.active,false);
+  setTimeout(()=>{
+    const sb=document.getElementById('sb');
+    if(sb){sb.textContent=`⚡ STEAL CHANCE — ${name.toUpperCase()}!`;sb.classList.add('vis');}
+    renderHA('revealed');
+  },1500);
+}
+
+function award(team,pts,isSteal){
+  const tName=team==='A'?G.tA.name:G.tB.name;
+  const catName=G.pendCat||'';
+  const diffLabel=G.pendDiff?G.pendDiff.charAt(0).toUpperCase()+G.pendDiff.slice(1):'';
+  if(isSteal){
+    addLog('steal',`${tName} STOLE ${catName} ${diffLabel}`,pts);
+  } else {
+    addLog('correct',`${tName} answered ${catName} ${diffLabel} correctly`,pts);
+  }
+  showPop('correct',team,isSteal);
+  setTimeout(()=>{
+    if(team==='A'){G.tA.score+=pts;animSc('scA');}else{G.tB.score+=pts;animSc('scB');}
+    playOk();closeQ(true);
+  },1700);
+}
+
+let popT=null;
+function showPop(type,team,isSteal){
+  clearTimeout(popT);
+  const pop=document.getElementById('rpop');
+  const name=team==='A'?G.tA.name:G.tB.name;
+  const col=team==='A'?'var(--team-a)':'var(--team-b)';
+  pop.className='rpop show '+(type==='correct'?(isSteal?'sp2':'cp2'):'wp2');
+  document.getElementById('ricon').textContent=type==='correct'?(isSteal?'⚡':'✓'):'✗';
+  document.getElementById('rteam').textContent=name.toUpperCase();
+  document.getElementById('rteam').style.color=col;
+  document.getElementById('rlabel').textContent=type==='correct'?(isSteal?'STEAL! WELL PLAYED!':'CORRECT!'):'WRONG ANSWER';
+  popT=setTimeout(()=>{pop.className='rpop hide';setTimeout(()=>pop.className='rpop',280);},2200);
+}
+
+function animSc(id){const el=document.getElementById(id).querySelector('.pts');el.style.animation='scUp .4s ease';setTimeout(()=>el.style.animation='',500);}
+
+function closeQ(markUsed){
+  stopTimer();
+  stopAudio();
+  document.getElementById('modal').classList.remove('open');
+  document.getElementById('mBody').innerHTML='';
+  G.curQ=null;
+  if(markUsed){
+    G.used[G.pendKey]=true;
+    const cell=document.getElementById(`c-${G.pendKey}`);
+    if(cell){cell.classList.add('used');cell.classList.remove('locked');cell.innerHTML='';cell.onclick=null;}
+    G.active=G.active==='A'?'B':'A';
+  }
+  updScore();updLocks();
+  if(Object.keys(G.used).length>=G.totalCells)endGame();
+}
+
+// ── GAME LOG ──
+const LOG_MAX=5;
+function addLog(type,text,pts){
+  const log=document.getElementById('gameLog');
+  if(!log)return;
+  // remove empty placeholder
+  const empty=document.getElementById('logEmpty');
+  if(empty)empty.remove();
+  // remove oldest if over limit
+  const entries=log.querySelectorAll('.log-entry');
+  if(entries.length>=LOG_MAX)entries[0].remove();
+
+  const icons={correct:'✅',wrong:'❌',steal:'⚡',challenge:'🎯',skip:'⏭️'};
+  const div=document.createElement('div');
+  div.className=`log-entry ${type}`;
+  div.innerHTML=`
+    <span class="log-icon">${icons[type]||'•'}</span>
+    <span class="log-text">${text}</span>
+    ${pts!==undefined?`<span class="log-pts">${pts>0?'+':''}${pts}pt${Math.abs(pts)!==1?'s':''}</span>`:''}`;
+  log.appendChild(div);
+}
+
+function updScore(){
+  document.getElementById('lA').textContent=G.tA.name.toUpperCase();
+  document.getElementById('lB').textContent=G.tB.name.toUpperCase();
+  document.getElementById('pA').textContent=G.tA.score;
+  document.getElementById('pB').textContent=G.tB.score;
+  const name=G.active==='A'?G.tA.name:G.tB.name;
+  const col=G.active==='A'?'var(--team-a)':'var(--team-b)';
+  document.getElementById('turnLbl').textContent=name.toUpperCase()+"'S TURN";
+  document.getElementById('turnLbl').style.color=col;
+  document.getElementById('scA').classList.toggle('at',G.active==='A');
+  document.getElementById('scB').classList.toggle('at',G.active==='B');
+}
+
+function endGame(){
+  const a=G.tA.score,b=G.tB.score;
+  document.getElementById('fnA').textContent=G.tA.name.toUpperCase();
+  document.getElementById('fnB').textContent=G.tB.name.toUpperCase();
+  document.getElementById('fpA').textContent=a;
+  document.getElementById('fpB').textContent=b;
+  if(a===b){document.getElementById('wName').textContent="IT'S A TIE!";document.getElementById('wSub').textContent='An incredibly close game';document.querySelector('.wi').textContent='🤝';}
+  else{const w=a>b?G.tA.name:G.tB.name;document.getElementById('wName').textContent=`${w.toUpperCase()} WINS!`;document.getElementById('wSub').textContent='Champion of the Showdown';}
+  document.getElementById('fA').classList.toggle('win2',a>b);
+  document.getElementById('fB').classList.toggle('win2',b>a);
+  showScreen('win');confetti();playCeleb();
+}
+
+function playAgain(){
+  selA=[];selB=[];selS=[];
+  G.challengeKeys=null;
+  // restore editor display in case it was hidden
+  const edScreen=document.getElementById('editor');
+  if(edScreen)edScreen.style.display='';
+  document.getElementById('nA').value='';document.getElementById('nB').value='';
+  buildPickers();updCnt();valStart();showScreen('setup');
+}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+
+function confetti(){
+  const cols=['#f5c800','#e8192c','#ffffff','#1a9fff','#00c97a','#ff5c1a'];
+  for(let i=0;i<100;i++)setTimeout(()=>{
+    const c=document.createElement('div');c.className='cp3';
+    c.style.cssText=`left:${Math.random()*100}vw;background:${cols[~~(Math.random()*cols.length)]};animation-duration:${1.8+Math.random()*2}s;animation-delay:${Math.random()*.4}s;transform:rotate(${Math.random()*360}deg);width:${6+Math.random()*8}px;height:${8+Math.random()*10}px`;
+    document.body.appendChild(c);c.addEventListener('animationend',()=>c.remove());
+  },i*20);
+}
+
+// ── CHALLENGE BANK ──
+const CHALLENGES=[
+  {icon:'⚽',title:'Name Footballers',desc:'Name as many professional footballers as you can!'},
+  {icon:'🎬',title:'Name Movies',desc:'Name as many movies as you can!'},
+  {icon:'🌍',title:'Name Countries',desc:'Name as many countries in the world as you can!'},
+  {icon:'🎵',title:'Name Artists',desc:'Name as many music artists or bands as you can!'},
+  {icon:'🏀',title:'Name NBA Players',desc:'Name as many NBA players as you can!'},
+  {icon:'📺',title:'Name TV Shows',desc:'Name as many TV shows as you can!'},
+  {icon:'🦁',title:'Name Animals',desc:'Name as many animals as you can!'},
+  {icon:'🍕',title:'Name Foods',desc:'Name as many dishes or foods as you can!'},
+  {icon:'🏆',title:'Name Champions League Winners',desc:'Name as many UEFA Champions League winning clubs as you can!'},
+  {icon:'🎮',title:'Name Video Games',desc:'Name as many video games as you can!'},
+  {icon:'🗺️',title:'Name Capital Cities',desc:'Name as many capital cities as you can!'},
+  {icon:'🦸',title:'Name Superheroes',desc:'Name as many superheroes as you can!'},
+];
+
+// challenge state
+let C={
+  key:'',pts:0,
+  challenge:null,
+  bidA:0,bidB:0,
+  bidTurn:'A',   // whose turn to bid
+  passedA:false,passedB:false,
+  winner:null,   // which team won the auction
+  timerInt:null,timerSec:30,
+  timerStarted:false,
+};
+
+function openChallenge(key,pts){
+  C.key=key;C.pts=pts;
+  C.challenge=CHALLENGES[Math.floor(Math.random()*CHALLENGES.length)];
+  C.bidA=0;C.bidB=0;
+  C.bidTurn=G.active; // active team bids first
+  C.passedA=false;C.passedB=false;
+  C.winner=null;C.timerStarted=false;
+  clearInterval(C.timerInt);
+  renderChallengeReveal();
+  document.getElementById('cModal').classList.add('open');
+}
+
+function renderChallengeReveal(){
+  document.getElementById('cBody').innerHTML=`
+    <div class="ch-reveal">
+      <span class="ch-icon">${C.challenge.icon}</span>
+      <div class="ch-label">⚡ CHALLENGE ROUND</div>
+      <div class="ch-title">${C.challenge.title}</div>
+      <div class="ch-desc">${C.challenge.desc}</div>
+    </div>
+    <div class="ha" style="justify-content:center">
+      <button class="hb reveal" style="max-width:260px" onclick="renderChallengeBid()">START BIDDING →</button>
+    </div>`;
+}
+
+function renderChallengeBid(){
+  const nameA=G.tA.name.toUpperCase();
+  const nameB=G.tB.name.toUpperCase();
+  // figure out who is currently bidding
+  const bidderName=C.bidTurn==='A'?nameA:nameB;
+  const bidderCol=C.bidTurn==='A'?'var(--team-a)':'var(--team-b)';
+  const currentBid=Math.max(C.bidA,C.bidB);
+  // each team can bid or pass; if both pass the last bidder wins
+  // if no bids yet, starting bid is 1
+  const nextBid=currentBid+1;
+
+  // determine if current bidder already passed
+  const alreadyPassed=C.bidTurn==='A'?C.passedA:C.passedB;
+
+  document.getElementById('cBody').innerHTML=`
+    <div class="ch-reveal" style="padding-bottom:12px">
+      <span class="ch-icon" style="font-size:2.5rem">${C.challenge.icon}</span>
+      <div class="ch-title" style="font-size:1.8rem">${C.challenge.title}</div>
+    </div>
+    <div class="bid-status" id="bidStatus">How many can you name?</div>
+    <div class="bid-area">
+      <div class="bid-card ba${C.bidTurn==='A'?' active-bid':''}${C.winner==='A'?' winner-bid':''}">
+        <div class="bname">${nameA}</div>
+        <div class="bnum">${C.bidA||'–'}</div>
+        <div class="bid-btns">
+          ${C.bidTurn==='A'&&!C.passedA?`<button class="bid-btn up" onclick="placeBid('A',${nextBid})">BID ${nextBid}</button>
+          <button class="bid-btn pass" onclick="passBid('A')">PASS</button>`
+          :`<span style="font-family:var(--font-cond);font-size:.75rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em">${C.passedA?'PASSED':C.bidA>0?'BID PLACED':'WAITING'}</span>`}
+        </div>
+      </div>
+      <div class="bid-card bb${C.bidTurn==='B'?' active-bid':''}${C.winner==='B'?' winner-bid':''}">
+        <div class="bname">${nameB}</div>
+        <div class="bnum">${C.bidB||'–'}</div>
+        <div class="bid-btns">
+          ${C.bidTurn==='B'&&!C.passedB?`<button class="bid-btn up" onclick="placeBid('B',${nextBid})">BID ${nextBid}</button>
+          <button class="bid-btn pass" onclick="passBid('B')">PASS</button>`
+          :`<span style="font-family:var(--font-cond);font-size:.75rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em">${C.passedB?'PASSED':C.bidB>0?'BID PLACED':'WAITING'}</span>`}
+        </div>
+      </div>
+    </div>
+    <div class="bid-turn-indicator" id="bidTurnInd">
+      <span style="color:${bidderCol}">${bidderName}</span>'S TURN TO BID
+    </div>`;
+}
+
+function placeBid(team,amount){
+  if(team==='A') C.bidA=amount;
+  else C.bidB=amount;
+
+  const otherTeam=team==='A'?'B':'A';
+  const otherPassed=otherTeam==='A'?C.passedA:C.passedB;
+
+  if(otherPassed){
+    // other team already passed — this team wins with their bid
+    C.winner=team;
+    renderChallengeCountdown();
+  } else {
+    // switch turn to other team
+    C.bidTurn=otherTeam;
+    renderChallengeBid();
+  }
+}
+
+function passBid(team){
+  if(team==='A') C.passedA=true;
+  else C.passedB=true;
+
+  const otherTeam=team==='A'?'B':'A';
+  const otherBid=otherTeam==='A'?C.bidA:C.bidB;
+  const myBid=team==='A'?C.bidA:C.bidB;
+  const bothPassed=C.passedA&&C.passedB;
+
+  if(bothPassed){
+    // both passed — whoever bid more wins; if neither bid, active team wins at 1
+    if(C.bidA===0&&C.bidB===0){
+      C.winner=G.active;
+      if(C.winner==='A')C.bidA=1;else C.bidB=1;
+    } else {
+      C.winner=C.bidA>=C.bidB?'A':'B';
+    }
+    renderChallengeCountdown();
+  } else if(otherBid>0){
+    // other team already has a bid — passing means they win
+    C.winner=otherTeam;
+    renderChallengeCountdown();
+  } else {
+    // other team hasn't bid yet — switch to them
+    C.bidTurn=otherTeam;
+    renderChallengeBid();
+  }
+}
+
+function renderChallengeCountdown(){
+  const winnerName=(C.winner==='A'?G.tA.name:G.tB.name).toUpperCase();
+  const winnerCol=C.winner==='A'?'var(--team-a)':'var(--team-b)';
+  const targetBid=C.winner==='A'?C.bidA:C.bidB;
+  C.timerSec=30;C.timerStarted=false;
+
+  document.getElementById('cBody').innerHTML=`
+    <div class="ctimer-wrap">
+      <div class="ctimer-team" style="color:${winnerCol}">${winnerName}</div>
+      <div class="ctimer-target">${C.challenge.icon} Name ${targetBid} — ${C.challenge.title.replace('Name ','')}</div>
+      <div class="ctimer-num" id="cTimerNum">30</div>
+      <div class="ctimer-bar-w"><div class="ctimer-bar" id="cTimerBar"></div></div>
+    </div>
+    <button class="start-timer-btn" id="startTimerBtn" onclick="startChallengeTimer()">
+      ${winnerName} — WE'RE READY! START! ▶
+    </button>
+    <div class="ha" id="cHA" style="display:none">
+      <button class="hb c" onclick="resolveChallenge(true)">✓ REACHED ${targetBid}!</button>
+      <button class="hb w" onclick="resolveChallenge(false)">✗ DIDN'T MAKE IT</button>
+    </div>`;
+}
+
+function startChallengeTimer(){
+  if(C.timerStarted)return;
+  C.timerStarted=true;
+  document.getElementById('startTimerBtn').disabled=true;
+  document.getElementById('startTimerBtn').textContent='TIMER RUNNING... GO!';
+  C.timerSec=30;
+  clearInterval(C.timerInt);
+  C.timerInt=setInterval(()=>{
+    C.timerSec--;
+    const pct=Math.max(0,(C.timerSec/30)*100);
+    const numEl=document.getElementById('cTimerNum');
+    const barEl=document.getElementById('cTimerBar');
+    if(numEl)numEl.textContent=C.timerSec;
+    if(barEl)barEl.style.width=pct+'%';
+    if(C.timerSec<=10){
+      if(numEl)numEl.classList.add('urg');
+      if(barEl)barEl.style.background='var(--red)';
+      boop();
+    }
+    if(C.timerSec<=0){
+      clearInterval(C.timerInt);
+      if(numEl){numEl.textContent='0';numEl.classList.add('urg');}
+      // auto-show judge buttons
+      const haEl=document.getElementById('cHA');
+      const startBtn=document.getElementById('startTimerBtn');
+      if(haEl)haEl.style.display='flex';
+      if(startBtn)startBtn.style.display='none';
+    }
+  },1000);
+}
+
+function resolveChallenge(success){
+  clearInterval(C.timerInt);
+  document.getElementById('cModal').classList.remove('open');
+  document.getElementById('cBody').innerHTML='';
+
+  // mark cell used
+  G.used[C.key]=true;
+  const cell=document.getElementById(`c-${C.key}`);
+  if(cell){cell.classList.add('used');cell.classList.remove('locked','challenge');cell.innerHTML='';cell.onclick=null;}
+
+  if(success){
+    const wName=C.winner==='A'?G.tA.name:G.tB.name;
+    const target=C.winner==='A'?C.bidA:C.bidB;
+    addLog('challenge',`${wName} completed the challenge — ${C.challenge.icon} ${target} ${C.challenge.title.replace('Name ','')}`,C.pts);
+    showPop('correct',C.winner,false);
+    setTimeout(()=>{
+      if(C.winner==='A'){G.tA.score+=C.pts;animSc('scA');}
+      else{G.tB.score+=C.pts;animSc('scB');}
+      playOk();
+      G.active=G.active==='A'?'B':'A';
+      updScore();updLocks();
+      if(Object.keys(G.used).length>=G.totalCells)endGame();
+    },1700);
+  } else {
+    const loser=C.winner;
+    const other=loser==='A'?'B':'A';
+    const lName=loser==='A'?G.tA.name:G.tB.name;
+    const oName2=other==='A'?G.tA.name:G.tB.name;
+    addLog('wrong',`${lName} failed the challenge — ${oName2} gets the points`);
+    showPop('wrong',loser,false);
+    setTimeout(()=>{
+      showPop('correct',other,true);
+      setTimeout(()=>{
+        if(other==='A'){G.tA.score+=C.pts;animSc('scA');}
+        else{G.tB.score+=C.pts;animSc('scB');}
+        playOk();
+        G.active=G.active==='A'?'B':'A';
+        updScore();updLocks();
+        if(Object.keys(G.used).length>=G.totalCells)endGame();
+      },1700);
+    },1500);
+  }
+}
+
+function renderEditor(){
+  const cats=[...G.tA.cats,...G.tB.cats,...G.shared];
+  edCat=cats[0];
+  const tabs=document.getElementById('edCatTabs');
+  tabs.innerHTML='';
+  cats.forEach((cat,i)=>{
+    const btn=document.createElement('button');
+    btn.className='cat-tab'+(i===0?' active-tab':'');
+    btn.innerHTML=`${CATS.find(c=>c.id===cat.id)?.icon||'❓'} ${cat.name}`;
+    btn.onclick=()=>{
+      edCat=cat;
+      tabs.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active-tab'));
+      btn.classList.add('active-tab');
+      renderQList();
+    };
+    tabs.appendChild(btn);
+  });
+  edDiff='easy';
+  document.querySelectorAll('.diff-tab').forEach(b=>b.classList.remove('active-diff'));
+  document.querySelector('.dt-easy').classList.add('active-diff');
+  updateFormMode();
+  renderQList();
+}
+
+function setEdDiff(diff,btn){
+  edDiff=diff;
+  document.querySelectorAll('.diff-tab').forEach(b=>b.classList.remove('active-diff'));
+  btn.classList.add('active-diff');
+  updateFormMode();
+  renderQList();
+  ['edQ','edAns','edW1','edW2','edW3'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+
+function updateFormMode(){
+  const isMCQ=edDiff==='easy';
+  document.getElementById('edFormTitle').textContent=
+    isMCQ?'+ ADD EASY QUESTION (MULTIPLE CHOICE)':
+    edDiff==='medium'?'+ ADD MEDIUM QUESTION (OPEN — HOST JUDGES)':
+    '+ ADD HARD QUESTION (OPEN — HOST JUDGES)';
+  document.getElementById('edWrongWrap1').style.display=isMCQ?'':'none';
+  document.getElementById('edWrongFields').className='wrong-fields'+(isMCQ?' show':'');
+}
+
+function renderQList(){
+  if(!edCat)return;
+  const key=`${edCat.id}-${edDiff}`;
+  const qs=CUSTOM_BANK[key]||[];
+  const list=document.getElementById('edQList');
+  if(qs.length===0){
+    list.innerHTML=`<div class="q-empty">No custom questions yet for this slot</div>`;
+  } else {
+    list.innerHTML='';
+    qs.forEach((q,i)=>{
+      const div=document.createElement('div');div.className='q-item';
+      const wrongText=q.options?q.options.filter(o=>o!==q.correct).join(' · '):'';
+      div.innerHTML=`
+        <div class="q-item-text">
+          <div class="q-item-q">${q.question}</div>
+          <div class="q-item-ans">✓ ${q.correct}</div>
+          ${wrongText?`<div class="q-item-wrong">✗ ${wrongText}</div>`:''}
+        </div>
+        <button class="q-del" onclick="deleteCustomQ('${key}',${i})">DEL</button>`;
+      list.appendChild(div);
+    });
+  }
+  updEdTotal();
+}
+
+function addCustomQ(){
+  if(!edCat){return;}
+  const q=document.getElementById('edQ').value.trim();
+  const ans=document.getElementById('edAns').value.trim();
+  if(!q||!ans){alert('Please fill in the question and correct answer.');return;}
+  const key=`${edCat.id}-${edDiff}`;
+  if(!CUSTOM_BANK[key])CUSTOM_BANK[key]=[];
+  if(edDiff==='easy'){
+    const w1=document.getElementById('edW1').value.trim();
+    const w2=document.getElementById('edW2').value.trim();
+    const w3=document.getElementById('edW3').value.trim();
+    if(!w1||!w2||!w3){alert('Easy questions need 3 wrong options for MCQ.');return;}
+    CUSTOM_BANK[key].push({question:q,correct:ans,options:shuffle([ans,w1,w2,w3])});
+  } else {
+    CUSTOM_BANK[key].push({question:q,correct:ans,options:null});
+  }
+  ['edQ','edAns','edW1','edW2','edW3'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('edQ').focus();
+  renderQList();
+}
+
+function deleteCustomQ(key,idx){
+  if(CUSTOM_BANK[key])CUSTOM_BANK[key].splice(idx,1);
+  renderQList();
+}
+
+function updEdTotal(){
+  let total=0;
+  Object.values(CUSTOM_BANK).forEach(arr=>total+=arr.length);
+  const el=document.getElementById('edTotal');
+  if(el)el.innerHTML=`Total custom questions: <span>${total}</span>`;
+}
+
+// ── EMBEDDED QUESTION BANK ──
+// Questions are embedded directly so the game works locally without a server.
+// To add more questions, edit the QUESTION_DATA object below or use the in-game editor.
+const QUESTION_DATA = {
+  "102-easy": [
+    {"question":"What is the capital city of Jordan?","correct":"Amman","options":["Amman","Aqaba","Irbid","Zarqa"]},
+    {"question":"What is the official currency of Jordan?","correct":"Jordanian Dinar","options":["Jordanian Dinar","Jordanian Pound","Jordanian Riyal","Jordanian Dirham"]},
+    {"question":"Which famous ancient city carved in rock is located in Jordan?","correct":"Petra","options":["Petra","Jerash","Madaba","Ajloun"]},
+    {"question":"What is the national dish of Jordan?","correct":"Mansaf","options":["Mansaf","Falafel","Shawarma","Kabsa"]},
+    {"question":"What color is the star on the Jordanian flag?","correct":"White","options":["White","Yellow","Gold","Silver"]},
+    {"question":"Which river forms part of Jordan's western border?","correct":"Jordan River","options":["Jordan River","Nile River","Euphrates","Yarmouk River"]},
+    {"question":"What is the largest city in Jordan?","correct":"Amman","options":["Amman","Zarqa","Irbid","Aqaba"]},
+    {"question":"What is the name of the sea bordering Jordan to the west?","correct":"Dead Sea","options":["Dead Sea","Red Sea","Mediterranean Sea","Arabian Sea"]},
+    {"question":"What is the official language of Jordan?","correct":"Arabic","options":["Arabic","English","French","Turkish"]},
+    {"question":"Jordan shares a border with how many countries?","correct":"5","options":["5","3","4","6"]}
+  ],
+  "102-medium": [
+    {"question":"In what year did Jordan gain independence from Britain?","correct":"1946"},
+    {"question":"Who was the founder of the modern Hashemite Kingdom of Jordan?","correct":"King Abdullah I"},
+    {"question":"What ancient Roman city ruins are located in northern Jordan?","correct":"Jerash"},
+    {"question":"What is the name of Jordan's only port city?","correct":"Aqaba"},
+    {"question":"Which Jordanian castle was built by the Crusaders in the 12th century?","correct":"Kerak Castle"},
+    {"question":"What is the name of the ancient trade route that runs through Jordan north to south?","correct":"King's Highway"},
+    {"question":"Which king of Jordan signed a peace treaty with Israel in 1994?","correct":"King Hussein"},
+    {"question":"What is the name of Jordan's state-owned airline?","correct":"Royal Jordanian"},
+    {"question":"What is the name of the desert that covers most of eastern Jordan?","correct":"Badia Desert"},
+    {"question":"In which city is the University of Jordan located?","correct":"Amman"}
+  ],
+  "102-hard": [
+    {"question":"In what year was Petra rediscovered by Swiss explorer Johann Ludwig Burckhardt?","correct":"1812"},
+    {"question":"What is the name of the Nabataean treasury carved in Petra?","correct":"Al-Khazneh"},
+    {"question":"Which ancient Jordanian site contains the oldest surviving map of the Holy Land?","correct":"Madaba"},
+    {"question":"What is the elevation of Jordan's highest point, Jabal Umm ad Dami?","correct":"1854 meters"},
+    {"question":"What percentage of Jordan's land is desert?","correct":"75%"},
+    {"question":"In which year did Jordan and Israel sign the Wadi Araba peace treaty?","correct":"1994"},
+    {"question":"Which Jordanian city is known as the Rose-Red City?","correct":"Petra"},
+    {"question":"What is the name of the mosaic map found in a church in Madaba?","correct":"Madaba Map"},
+    {"question":"What ancient city north of Amman did Alexander the Great rename Philadelphia?","correct":"Amman"},
+    {"question":"What is the name of the Jordanian special forces royal protection unit?","correct":"1st Royal Guards Brigade"}
+  ],
+  "103-easy": [
+    {"question":"How many rounds are in a standard professional boxing match?","correct":"12","options":["12","10","15","8"]},
+    {"question":"Which country does Muhammad Ali come from?","correct":"USA","options":["USA","UK","Cuba","Jamaica"]},
+    {"question":"Which weight class is the heaviest in boxing?","correct":"Heavyweight","options":["Heavyweight","Super heavyweight","Cruiserweight","Light heavyweight"]},
+    {"question":"How long is each round in professional boxing?","correct":"3 minutes","options":["3 minutes","2 minutes","4 minutes","5 minutes"]},
+    {"question":"What is it called when a boxer can't get up before the count of 10?","correct":"Knockout","options":["Knockout","Foul","Draw","Surrender"]},
+    {"question":"Muhammad Ali's original name was?","correct":"Cassius Clay","options":["Cassius Clay","Mike Ali","John Clay","James Ali"]},
+    {"question":"Which country is Canelo Alvarez from?","correct":"Mexico","options":["Mexico","USA","Puerto Rico","Cuba"]},
+    {"question":"What is the term for a boxer who leads with their right hand?","correct":"Southpaw","options":["Southpaw","Orthodox","Switch","Rightie"]},
+    {"question":"How many judges score a professional boxing match?","correct":"3","options":["3","2","4","5"]},
+    {"question":"What do boxers wear on their hands?","correct":"Boxing gloves","options":["Boxing gloves","Tape only","Bare fists","Mittens"]}
+  ],
+  "103-medium": [
+    {"question":"Who is known as 'The Greatest' in boxing history?","correct":"Muhammad Ali"},
+    {"question":"Which boxer was nicknamed 'Iron Mike'?","correct":"Mike Tyson"},
+    {"question":"Who did Muhammad Ali defeat to win his first world heavyweight title in 1964?","correct":"Sonny Liston"},
+    {"question":"What does TKO stand for in boxing?","correct":"Technical Knockout"},
+    {"question":"Who held the record of 49 unbeaten fights?","correct":"Floyd Mayweather"},
+    {"question":"Which city is known as the boxing capital of the world?","correct":"Las Vegas"},
+    {"question":"Who beat Mike Tyson in one of the biggest upsets in 1990?","correct":"Buster Douglas"},
+    {"question":"What is the lightest weight class in professional boxing?","correct":"Minimumweight"},
+    {"question":"What is the name of the punch thrown with the rear hand?","correct":"Cross"},
+    {"question":"Which Jordanian boxer won a silver medal at the 2024 Paris Olympics?","correct":"Ziad Eashash"}
+  ],
+  "103-hard": [
+    {"question":"In what year did Muhammad Ali refuse induction into the US Army?","correct":"1967"},
+    {"question":"What was the name of the 1974 Ali vs Foreman fight in Zaire?","correct":"Rumble in the Jungle"},
+    {"question":"What is the exact weight limit in pounds for the welterweight division?","correct":"147 pounds"},
+    {"question":"Who was the first boxer to defeat Floyd Mayweather professionally?","correct":"Nobody — he retired undefeated"},
+    {"question":"In which year did Sugar Ray Leonard win his first world title?","correct":"1979"},
+    {"question":"What is the name of the governing body that sanctions WBC title fights?","correct":"World Boxing Council"},
+    {"question":"In what city did the Thrilla in Manila take place in 1975?","correct":"Manila, Philippines"},
+    {"question":"What was Mike Tyson's record before his loss to Buster Douglas?","correct":"37-0"},
+    {"question":"Which boxer has the most world championship title defenses in history?","correct":"Joe Louis"},
+    {"question":"What weight division did Manny Pacquiao win to become champion in 8 divisions?","correct":"Super welterweight"}
+  ],
+  "101-easy": [
+    {"question":"Who is this player?","correct":"Cristiano Ronaldo","image":"https://img.a.transfermarkt.technology/portrait/big/8198-1698671065.jpg","options":["Cristiano Ronaldo","Lionel Messi","Neymar","Kylian Mbappé"]},
+    {"question":"Who is this player?","correct":"Lionel Messi","image":"https://img.a.transfermarkt.technology/portrait/big/28003-1695827515.jpg","options":["Lionel Messi","Cristiano Ronaldo","Luka Modric","Sergio Ramos"]},
+    {"question":"Who is this player?","correct":"Kylian Mbappé","image":"https://img.a.transfermarkt.technology/portrait/big/342229-1695905198.jpg","options":["Kylian Mbappé","Antoine Griezmann","Ousmane Dembélé","Karim Benzema"]},
+    {"question":"Who is this player?","correct":"Mohamed Salah","image":"https://img.a.transfermarkt.technology/portrait/big/148455-1698671374.jpg","options":["Mohamed Salah","Sadio Mané","Riyad Mahrez","Hakim Ziyech"]},
+    {"question":"Who is this player?","correct":"Robert Lewandowski","image":"https://img.a.transfermarkt.technology/portrait/big/38253-1695905456.jpg","options":["Robert Lewandowski","Karim Benzema","Harry Kane","Erling Haaland"]},
+    {"question":"Who is this player?","correct":"Neymar Jr","image":"https://img.a.transfermarkt.technology/portrait/big/68290-1695905139.jpg","options":["Neymar Jr","Vinicius Jr","Rodrygo","Richarlison"]}
+  ],
+  "101-medium": [
+    {"question":"Who is this player? Name him.","correct":"Erling Haaland","image":"https://img.a.transfermarkt.technology/portrait/big/418560-1695905581.jpg"},
+    {"question":"Who is this player? Name him.","correct":"Luka Modric","image":"https://img.a.transfermarkt.technology/portrait/big/27992-1695905185.jpg"},
+    {"question":"Who is this player? Name him.","correct":"Kevin De Bruyne","image":"https://img.a.transfermarkt.technology/portrait/big/88755-1695905319.jpg"},
+    {"question":"Who is this player? Name him.","correct":"Jude Bellingham","image":"https://img.a.transfermarkt.technology/portrait/big/581678-1695906185.jpg"},
+    {"question":"Who is this player? Name him.","correct":"Virgil van Dijk","image":"https://img.a.transfermarkt.technology/portrait/big/139208-1695905386.jpg"},
+    {"question":"Who is this player? Name him.","correct":"Vinicius Jr","image":"https://img.a.transfermarkt.technology/portrait/big/371998-1695905224.jpg"}
+  ],
+  "101-hard": [
+    {"question":"Who is this player? Name him and his current club.","correct":"Pedri — Barcelona","image":"https://img.a.transfermarkt.technology/portrait/big/608862-1695905470.jpg"},
+    {"question":"Who is this player? Name him and his nationality.","correct":"Rodri — Spanish","image":"https://img.a.transfermarkt.technology/portrait/big/357565-1695905557.jpg"},
+    {"question":"Who is this player? Name him and what he is famous for.","correct":"Zinedine Zidane — headbutt in 2006 World Cup final","image":"https://img.a.transfermarkt.technology/portrait/big/3588-1473412803.jpg"},
+    {"question":"Who is this player? Name him and his country.","correct":"Son Heung-min — South Korea","image":"https://img.a.transfermarkt.technology/portrait/big/139093-1695905410.jpg"},
+    {"question":"Who is this player? Name him and his position.","correct":"Thibaut Courtois — Goalkeeper","image":"https://img.a.transfermarkt.technology/portrait/big/106144-1695905350.jpg"}
+  ],
+  // ── API CATEGORY FALLBACK (works locally without a server) ──
+  "21-easy": [
+    {"question":"How many players are on a football team?","correct":"11","options":["11","10","9","12"]},
+    {"question":"Which country won the 2022 FIFA World Cup?","correct":"Argentina","options":["Argentina","France","Brazil","Germany"]},
+    {"question":"How many meters is an Olympic swimming pool?","correct":"50","options":["50","25","100","75"]},
+    {"question":"In which sport would you perform a slam dunk?","correct":"Basketball","options":["Basketball","Volleyball","Tennis","Football"]},
+    {"question":"How many gold medals did Usain Bolt win in the Olympics?","correct":"8","options":["8","6","9","7"]},
+    {"question":"Which country hosted the 2022 FIFA World Cup?","correct":"Qatar","options":["Qatar","UAE","Saudi Arabia","Bahrain"]},
+    {"question":"How many players are on a basketball team on the court?","correct":"5","options":["5","6","4","7"]},
+    {"question":"In tennis, what is a score of 40-40 called?","correct":"Deuce","options":["Deuce","Tie","Draw","Match point"]},
+    {"question":"How many rings are on the Olympic flag?","correct":"5","options":["5","4","6","7"]},
+    {"question":"Which sport uses a puck?","correct":"Ice hockey","options":["Ice hockey","Polo","Lacrosse","Curling"]}
+  ],
+  "21-medium": [
+    {"question":"Who has won the most Grand Slam tennis titles in men's singles?","correct":"Novak Djokovic"},
+    {"question":"Which club has won the most UEFA Champions League titles?","correct":"Real Madrid"},
+    {"question":"In what year were the first modern Olympics held?","correct":"1896"},
+    {"question":"Who scored the famous 'Hand of God' goal?","correct":"Diego Maradona"},
+    {"question":"Which country has won the most FIFA World Cups?","correct":"Brazil"},
+    {"question":"What is the maximum score in a game of bowling?","correct":"300"},
+    {"question":"Who holds the world record for the 100m sprint?","correct":"Usain Bolt"},
+    {"question":"In which sport is the Ryder Cup contested?","correct":"Golf"},
+    {"question":"How many points is a try worth in rugby union?","correct":"5"},
+    {"question":"What year did Michael Jordan retire for the first time?","correct":"1993"}
+  ],
+  "21-hard": [
+    {"question":"How many consecutive Ballon d'Or awards did Lionel Messi win from 2009?","correct":"4"},
+    {"question":"What is the exact distance of a marathon in kilometers?","correct":"42.195 km"},
+    {"question":"Which country won the first ever FIFA World Cup in 1930?","correct":"Uruguay"},
+    {"question":"How many times has Brazil won the FIFA World Cup?","correct":"5"},
+    {"question":"Who was the first player to score 100 points in a single NBA game?","correct":"Wilt Chamberlain"},
+    {"question":"In what year was the first Tour de France held?","correct":"1903"},
+    {"question":"Which boxer was known as 'The Brown Bomber'?","correct":"Joe Louis"},
+    {"question":"How many Grand Slam titles did Roger Federer win?","correct":"20"},
+    {"question":"What is the nickname of the New Zealand rugby team?","correct":"All Blacks"},
+    {"question":"In which year did Tiger Woods win his first Masters?","correct":"1997"}
+  ],
+  "22-easy": [
+    {"question":"What is the capital of France?","correct":"Paris","options":["Paris","London","Berlin","Madrid"]},
+    {"question":"Which is the largest country in the world by area?","correct":"Russia","options":["Russia","Canada","China","USA"]},
+    {"question":"What is the capital of Japan?","correct":"Tokyo","options":["Tokyo","Osaka","Kyoto","Hiroshima"]},
+    {"question":"Which continent is Brazil in?","correct":"South America","options":["South America","North America","Africa","Asia"]},
+    {"question":"How many continents are there on Earth?","correct":"7","options":["7","5","6","8"]},
+    {"question":"What is the longest river in the world?","correct":"Nile","options":["Nile","Amazon","Yangtze","Mississippi"]},
+    {"question":"What is the smallest country in the world?","correct":"Vatican City","options":["Vatican City","Monaco","San Marino","Liechtenstein"]},
+    {"question":"Which ocean is the largest?","correct":"Pacific Ocean","options":["Pacific Ocean","Atlantic Ocean","Indian Ocean","Arctic Ocean"]},
+    {"question":"What is the capital of Australia?","correct":"Canberra","options":["Canberra","Sydney","Melbourne","Brisbane"]},
+    {"question":"Which country has the most people in the world?","correct":"India","options":["India","China","USA","Indonesia"]}
+  ],
+  "22-medium": [
+    {"question":"What is the capital of Canada?","correct":"Ottawa"},
+    {"question":"Which African country has the largest population?","correct":"Nigeria"},
+    {"question":"What is the tallest mountain in the world?","correct":"Mount Everest"},
+    {"question":"Which country is home to the Amazon rainforest mostly?","correct":"Brazil"},
+    {"question":"What is the capital of Saudi Arabia?","correct":"Riyadh"},
+    {"question":"Which sea separates Europe from Africa?","correct":"Mediterranean Sea"},
+    {"question":"What is the capital of South Korea?","correct":"Seoul"},
+    {"question":"Which country has the most pyramids in the world?","correct":"Sudan"},
+    {"question":"What is the name of the largest desert in the world?","correct":"Sahara"},
+    {"question":"Which country has the longest coastline in the world?","correct":"Canada"}
+  ],
+  "22-hard": [
+    {"question":"What is the capital of Kazakhstan?","correct":"Astana"},
+    {"question":"Which country has the most time zones?","correct":"France"},
+    {"question":"What is the deepest lake in the world?","correct":"Lake Baikal"},
+    {"question":"Which two countries share the longest international border?","correct":"USA and Canada"},
+    {"question":"What is the capital of Myanmar?","correct":"Naypyidaw"},
+    {"question":"Which is the only country to border both the Atlantic and Indian Oceans?","correct":"South Africa"},
+    {"question":"What is the name of the strait between Spain and Morocco?","correct":"Strait of Gibraltar"},
+    {"question":"Which country has the most islands in the world?","correct":"Sweden"},
+    {"question":"What is the highest capital city in the world?","correct":"La Paz, Bolivia"},
+    {"question":"Which country is home to the ancient city of Carthage?","correct":"Tunisia"}
+  ],
+  "9-easy": [
+    {"question":"How many sides does a hexagon have?","correct":"6","options":["6","5","7","8"]},
+    {"question":"What is the chemical symbol for water?","correct":"H2O","options":["H2O","CO2","NaCl","O2"]},
+    {"question":"How many days are in a leap year?","correct":"366","options":["366","365","364","367"]},
+    {"question":"What color do you get mixing red and blue?","correct":"Purple","options":["Purple","Green","Orange","Pink"]},
+    {"question":"How many hours are in a day?","correct":"24","options":["24","12","48","36"]},
+    {"question":"What is the largest planet in our solar system?","correct":"Jupiter","options":["Jupiter","Saturn","Neptune","Uranus"]},
+    {"question":"What language is spoken in Brazil?","correct":"Portuguese","options":["Portuguese","Spanish","English","French"]},
+    {"question":"How many teeth does an adult human have?","correct":"32","options":["32","28","30","34"]},
+    {"question":"Which planet is known as the Red Planet?","correct":"Mars","options":["Mars","Venus","Mercury","Jupiter"]},
+    {"question":"What is the hardest natural substance on Earth?","correct":"Diamond","options":["Diamond","Gold","Iron","Quartz"]}
+  ],
+  "9-medium": [
+    {"question":"What year did World War II end?","correct":"1945"},
+    {"question":"Who painted the Mona Lisa?","correct":"Leonardo da Vinci"},
+    {"question":"What is the chemical symbol for gold?","correct":"Au"},
+    {"question":"How many bones are in the adult human body?","correct":"206"},
+    {"question":"What is the speed of light approximately?","correct":"300,000 km/s"},
+    {"question":"In what year did the Titanic sink?","correct":"1912"},
+    {"question":"Who wrote Romeo and Juliet?","correct":"William Shakespeare"},
+    {"question":"What is the currency of Japan?","correct":"Yen"},
+    {"question":"How many chromosomes do humans have?","correct":"46"},
+    {"question":"What is the capital of the United States?","correct":"Washington D.C."}
+  ],
+  "9-hard": [
+    {"question":"What is the only mammal that can fly?","correct":"Bat"},
+    {"question":"How many elements are in the periodic table?","correct":"118"},
+    {"question":"Who was the first person to walk on the moon?","correct":"Neil Armstrong"},
+    {"question":"What is the most spoken language in the world?","correct":"Mandarin Chinese"},
+    {"question":"In what year was the internet invented?","correct":"1983"},
+    {"question":"What is the square root of 144?","correct":"12"},
+    {"question":"Who discovered penicillin?","correct":"Alexander Fleming"},
+    {"question":"What is the powerhouse of the cell?","correct":"Mitochondria"},
+    {"question":"What is the atomic number of carbon?","correct":"6"},
+    {"question":"Which planet has the most moons?","correct":"Saturn"}
+  ],
+  "23-easy": [
+    {"question":"Who was the first President of the United States?","correct":"George Washington","options":["George Washington","Abraham Lincoln","Thomas Jefferson","John Adams"]},
+    {"question":"In which year did World War I begin?","correct":"1914","options":["1914","1916","1918","1912"]},
+    {"question":"Which ancient wonder was located in Alexandria?","correct":"Lighthouse of Alexandria","options":["Lighthouse of Alexandria","Colossus of Rhodes","Hanging Gardens","Statue of Zeus"]},
+    {"question":"Who was the first man in space?","correct":"Yuri Gagarin","options":["Yuri Gagarin","Neil Armstrong","Buzz Aldrin","Alan Shepard"]},
+    {"question":"In which year did World War II end?","correct":"1945","options":["1945","1943","1944","1946"]},
+    {"question":"Which empire was ruled by Julius Caesar?","correct":"Roman Empire","options":["Roman Empire","Greek Empire","Ottoman Empire","Persian Empire"]},
+    {"question":"Who was the famous Egyptian queen known for her beauty?","correct":"Cleopatra","options":["Cleopatra","Nefertiti","Hatshepsut","Isis"]},
+    {"question":"In which year did the Berlin Wall fall?","correct":"1989","options":["1989","1991","1987","1990"]},
+    {"question":"Who invented the telephone?","correct":"Alexander Graham Bell","options":["Alexander Graham Bell","Thomas Edison","Nikola Tesla","Benjamin Franklin"]},
+    {"question":"Which country launched the first satellite into space?","correct":"USSR","options":["USSR","USA","China","UK"]}
+  ],
+  "23-medium": [
+    {"question":"In what year did the French Revolution begin?","correct":"1789"},
+    {"question":"Who was the longest-reigning British monarch?","correct":"Queen Elizabeth II"},
+    {"question":"What was the name of the ship that sank in 1912?","correct":"Titanic"},
+    {"question":"In which year did the Soviet Union collapse?","correct":"1991"},
+    {"question":"Who led India's independence movement against British rule?","correct":"Mahatma Gandhi"},
+    {"question":"What was the name of the first atomic bomb dropped on Japan?","correct":"Little Boy"},
+    {"question":"In which year did Nelson Mandela become president of South Africa?","correct":"1994"},
+    {"question":"Who built the Great Wall of China?","correct":"Emperor Qin Shi Huang"},
+    {"question":"What was the name of the first artificial satellite launched into space?","correct":"Sputnik 1"},
+    {"question":"In which city was the Magna Carta signed?","correct":"Runnymede"}
+  ],
+  "23-hard": [
+    {"question":"In what year did Genghis Khan die?","correct":"1227"},
+    {"question":"Which battle in 1066 changed the course of English history?","correct":"Battle of Hastings"},
+    {"question":"What was the name of the last Tsar of Russia?","correct":"Nicholas II"},
+    {"question":"In which year did the Ottoman Empire officially end?","correct":"1922"},
+    {"question":"Who wrote The Communist Manifesto?","correct":"Karl Marx and Friedrich Engels"},
+    {"question":"What was the name of Napoleon Bonaparte's final defeat in 1815?","correct":"Battle of Waterloo"},
+    {"question":"Which pharaoh built the Great Pyramid of Giza?","correct":"Khufu"},
+    {"question":"In what year did the United States drop atomic bombs on Japan?","correct":"1945"},
+    {"question":"What was the name of the first president of the Soviet Union?","correct":"Vladimir Lenin"},
+    {"question":"Which civilization built Machu Picchu?","correct":"Inca"}
+  ],
+  "17-easy": [
+    {"question":"What planet is closest to the Sun?","correct":"Mercury","options":["Mercury","Venus","Earth","Mars"]},
+    {"question":"What gas do plants absorb from the air?","correct":"Carbon dioxide","options":["Carbon dioxide","Oxygen","Nitrogen","Hydrogen"]},
+    {"question":"What is the center of an atom called?","correct":"Nucleus","options":["Nucleus","Electron","Proton","Core"]},
+    {"question":"How many planets are in our solar system?","correct":"8","options":["8","9","7","10"]},
+    {"question":"What is the chemical symbol for oxygen?","correct":"O","options":["O","Ox","O2","Og"]},
+    {"question":"What force keeps us on the ground?","correct":"Gravity","options":["Gravity","Magnetism","Friction","Pressure"]},
+    {"question":"What is the boiling point of water in Celsius?","correct":"100°C","options":["100°C","90°C","110°C","80°C"]},
+    {"question":"Which organ pumps blood around the body?","correct":"Heart","options":["Heart","Lungs","Brain","Liver"]},
+    {"question":"What is the most abundant gas in Earth's atmosphere?","correct":"Nitrogen","options":["Nitrogen","Oxygen","Carbon dioxide","Argon"]},
+    {"question":"How many bones are in the human spine?","correct":"33","options":["33","24","26","30"]}
+  ],
+  "17-medium": [
+    {"question":"What is the speed of sound in air approximately?","correct":"343 m/s"},
+    {"question":"What is the powerhouse of the cell?","correct":"Mitochondria"},
+    {"question":"What is the chemical formula for table salt?","correct":"NaCl"},
+    {"question":"How many elements are in the periodic table?","correct":"118"},
+    {"question":"What is the nearest star to Earth (after the Sun)?","correct":"Proxima Centauri"},
+    {"question":"What is the process by which plants make food from sunlight?","correct":"Photosynthesis"},
+    {"question":"What is the unit of electric resistance?","correct":"Ohm"},
+    {"question":"What is absolute zero in Celsius?","correct":"-273.15°C"},
+    {"question":"What is the hardest mineral on the Mohs scale?","correct":"Diamond"},
+    {"question":"How many chambers does the human heart have?","correct":"4"}
+  ],
+  "17-hard": [
+    {"question":"What is the half-life of Carbon-14?","correct":"5,730 years"},
+    {"question":"What is the name of the force that holds protons and neutrons together in the nucleus?","correct":"Strong nuclear force"},
+    {"question":"What is the pH of pure water?","correct":"7"},
+    {"question":"What is the name of the theory that explains the origin of the universe?","correct":"Big Bang Theory"},
+    {"question":"What is the atomic mass of iron?","correct":"55.845"},
+    {"question":"What is Avogadro's number?","correct":"6.022 × 10²³"},
+    {"question":"What is the name of the scientist who developed the theory of relativity?","correct":"Albert Einstein"},
+    {"question":"What is the chemical formula for glucose?","correct":"C6H12O6"},
+    {"question":"What type of wave is light?","correct":"Electromagnetic wave"},
+    {"question":"What is the name of the phenomenon where light bends around a massive object?","correct":"Gravitational lensing"}
+  ],
+  "104-easy": [
+    {"question":"Name this song and artist!","correct":"Blinding Lights — The Weeknd","audio":"songs/blinding-lights.mp3"},
+    {"question":"Name this song and artist!","correct":"Don't Matter — Akon","audio":"songs/dont-matter.mp3"}
+  ],
+  "104-medium": [
+    {"question":"Name this song and artist!","correct":"Levitating — Dua Lipa","audio":"songs/levitating.mp3"},
+    {"question":"Name this song and artist!","correct":"HUMBLE. — Kendrick Lamar","audio":"songs/humble.mp3"}
+  ],
+  "104-hard": [
+    {"question":"Name this song and artist!","correct":"Thunder — Imagine Dragons","audio":"songs/thunder.mp3"},
+    {"question":"Name this song and artist!","correct":"Ms. Jackson — Outkast","audio":"songs/ms-jackson.mp3"}
+  ]
+};
+
+// Load embedded questions into CUSTOM_BANK
+Object.entries(QUESTION_DATA).forEach(([key,qs])=>{
+  if(!CUSTOM_BANK[key])CUSTOM_BANK[key]=[];
+  CUSTOM_BANK[key].push(...qs.map(q=>({
+    question:q.question||'',
+    correct:q.correct,
+    options:q.options||null,
+    image:q.image||null,
+    audio:q.audio||null
+  })));
+});
+
+// ── AUDIO PLAYER (for Guess the Song) ──
+let currentAudio=null;
+let audioStopTimer=null;
+const SONG_CLIP_START = 12; // seconds to skip intro
+const SONG_CLIP_LENGTH = 14; // seconds to play per clip
+
+function toggleAudio(src){
+  const btn=document.getElementById('audioPlayBtn');
+  if(currentAudio&&!currentAudio.paused){
+    stopAudio();
+    return;
+  }
+
+  const isSameSrc = currentAudio&&currentAudio.src===src;
+  if(!isSameSrc){
+    stopAudio();
+
+    currentAudio=new Audio(src);
+    currentAudio.preload='auto';
+
+    currentAudio.onended=()=>{
+      stopAudio();
+    };
+
+    currentAudio.addEventListener('loadedmetadata',()=>{
+      if(currentAudio.duration>SONG_CLIP_START){
+        currentAudio.currentTime=SONG_CLIP_START;
+      }
+    });
+  } else if(currentAudio.ended || (currentAudio.duration&&currentAudio.currentTime>=currentAudio.duration-0.1)){
+    currentAudio.currentTime=SONG_CLIP_START;
+  }
+
+  currentAudio.play().catch(()=>{});
+  if(btn){btn.textContent='⏸ PAUSE';btn.classList.add('playing');}
+
+  if(audioStopTimer){clearTimeout(audioStopTimer);}
+  audioStopTimer=setTimeout(()=>{stopAudio();}, SONG_CLIP_LENGTH*1000);
+}
+
+function stopAudio(){
+  if(audioStopTimer){clearTimeout(audioStopTimer);audioStopTimer=null;}
+  if(currentAudio){currentAudio.pause();currentAudio=null;}
+  const btn=document.getElementById('audioPlayBtn');
+  if(btn){btn.textContent='▶ PLAY';btn.classList.remove('playing');}
+}
+
+let AC=null;
+function getAC(){if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();return AC;}
+function tone(f,t,d,v=.15){try{const ctx=getAC(),o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+d);o.start();o.stop(ctx.currentTime+d);}catch{}}
+function playOk(){tone(523,'square',.08,.18);setTimeout(()=>tone(659,'square',.08,.18),80);setTimeout(()=>tone(784,'square',.15,.18),160);}
+function boop(){tone(440,'square',.06,.1);}
+function playCeleb(){[523,659,784,1047,1319].forEach((f,i)=>setTimeout(()=>tone(f,'square',.12,.15),i*80));}
+</script>
+</body>
+</html>
