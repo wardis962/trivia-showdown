@@ -190,6 +190,29 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .qc.easy .pl{color:var(--easy)}.qc.easy .dlabel{color:var(--easy)}
 .qc.medium .pl{color:var(--med)}.qc.medium .dlabel{color:var(--med)}
 .qc.hard .pl{color:var(--hard)}.qc.hard .dlabel{color:var(--hard)}
+@keyframes cPulse{0%,100%{box-shadow:0 0 0 0 rgba(245,200,0,.5)}50%{box-shadow:0 0 0 8px rgba(245,200,0,0)}}
+.qc.is-challenge{background:linear-gradient(135deg,#1a0a00,#3d1800);border:2px solid var(--yellow);animation:cPulse 2s ease-in-out infinite}
+.qc.is-challenge .pl{color:var(--yellow);font-size:1.6rem}
+.qc.is-challenge .dlabel{color:var(--yellow);opacity:1}
+.chal-wrap{padding:8px 0 4px;text-align:center}
+.chal-badge{display:inline-block;background:var(--yellow);color:var(--bg);font-family:var(--font-display);font-size:1rem;letter-spacing:.1em;padding:3px 14px;margin-bottom:14px}
+.chal-icon{font-size:3.5rem;line-height:1;margin-bottom:10px}
+.chal-title{font-family:var(--font-display);font-size:2rem;color:var(--yellow);letter-spacing:.04em;margin-bottom:8px}
+.chal-desc{font-family:var(--font-cond);font-size:1.1rem;color:var(--offwhite);margin-bottom:20px;line-height:1.4}
+.chal-pts{font-family:var(--font-cond);font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:20px}
+.chal-pts span{color:var(--yellow)}
+.chal-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
+.chal-start{padding:12px 32px;background:var(--yellow);color:var(--bg);font-family:var(--font-display);font-size:1.6rem;letter-spacing:.06em;border:none;border-radius:var(--radius);cursor:pointer;box-shadow:3px 3px 0 var(--red);transition:all .15s}
+.chal-start:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--red)}
+.chal-skip{padding:12px 24px;background:transparent;color:var(--dim);font-family:var(--font-cond);font-size:.9rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--dim2);border-radius:var(--radius);cursor:pointer;transition:all .15s}
+.chal-skip:hover{border-color:var(--white);color:var(--white)}
+.chal-timer{font-family:var(--font-display);font-size:4rem;color:var(--yellow);text-align:center;margin:16px 0;line-height:1}
+.chal-timer.urgent{color:var(--red);animation:tPulse .5s ease-in-out infinite}
+.chal-resolve{display:flex;gap:10px;justify-content:center;margin-top:16px}
+.chal-ok{padding:14px 32px;background:var(--easy);color:var(--bg);font-family:var(--font-display);font-size:1.5rem;border:none;border-radius:var(--radius);cursor:pointer;box-shadow:3px 3px 0 #007a4a}
+.chal-ok:hover{transform:translate(-1px,-1px)}
+.chal-fail{padding:14px 32px;background:var(--red);color:var(--white);font-family:var(--font-display);font-size:1.5rem;border:none;border-radius:var(--radius);cursor:pointer;box-shadow:3px 3px 0 #8a0010}
+.chal-fail:hover{transform:translate(-1px,-1px)}
 
 /* make rows fill available height */
 .board{flex:1;display:grid;gap:5px}
@@ -526,6 +549,14 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   <div class="stripe"></div>
 </div>
 
+<!-- CHALLENGE MODAL -->
+<div class="mo" id="chalModal" style="display:none">
+  <div class="mdl" style="border-top:4px solid var(--yellow)">
+    <div class="mdl-stripe"></div>
+    <div class="mdl-inner" id="chalBody"></div>
+  </div>
+</div>
+
 <!-- MODAL -->
 <div class="mo" id="modal">
   <div class="mdl">
@@ -574,7 +605,8 @@ let G={
   tA:{name:'Team A',cats:[],score:0},tB:{name:'Team B',cats:[],score:0},
   shared:[],active:'A',used:{},totalCells:0,
   curQ:null,timerInt:null,timerSec:60,
-  phase:'answer',pendPts:0,pendKey:'',pendDiff:'',pendCat:''
+  phase:'answer',pendPts:0,pendKey:'',pendDiff:'',pendCat:'',
+  challengeKey:null
 };
 let selA=[],selB=[],selS=[];
 
@@ -712,7 +744,7 @@ function startGame(){
 
   G.tA.name=nameA;G.tB.name=nameB;
   G.tA.cats=[...selA];G.tB.cats=[...selB];G.shared=[...selS];
-  G.tA.score=0;G.tB.score=0;G.used={};G.active='A';
+  G.tA.score=0;G.tB.score=0;G.used={};G.active='A';G.challengeKey=null;
   G.totalCells=allCats.length*3;
   launchGame();
 }
@@ -771,16 +803,31 @@ function renderBoard(){
     board.appendChild(h);
   });
 
+  // Pick one random hard cell as the challenge cell (persist across re-renders)
+  if(!G.challengeKey){
+    const hardCats=cats.filter(c=>!G.used[`${c.id}-hard`]);
+    if(hardCats.length>0){
+      const pick=hardCats[Math.floor(Math.random()*hardCats.length)];
+      G.challengeKey=`${pick.id}-hard`;
+    }
+  }
+
   [{k:'easy',l:'Easy',p:1},{k:'medium',l:'Medium',p:2},{k:'hard',l:'Hard',p:3}].forEach(d=>{
     cats.forEach(cat=>{
       const key=`${cat.id}-${d.k}`;
       const used=G.used[key];const ow=ownerOf(cat.id);const can=ow==='S'||ow===G.active;
+      const isChal=G.challengeKey===key&&!used;
       const cell=document.createElement('div');
-      cell.className=`qc ${d.k}${used?' used':''}${(!used&&!can)?' locked':''}`;
+      cell.className=`qc ${d.k}${used?' used':''}${(!used&&!can)?' locked':''}${isChal?' is-challenge':''}`;
       cell.id=`c-${key}`;
       if(!used){
-        cell.innerHTML=`<span class="pl">${d.p}</span><span class="dlabel">${d.l}</span>`;
-        if(can)cell.onclick=()=>openQ(cat,d.k,d.p,key);
+        if(isChal){
+          cell.innerHTML=`<span class="pl">⚡</span><span class="dlabel">CHALLENGE</span>`;
+          if(can)cell.onclick=()=>openChallenge(cat,key);
+        } else {
+          cell.innerHTML=`<span class="pl">${d.p}</span><span class="dlabel">${d.l}</span>`;
+          if(can)cell.onclick=()=>openQ(cat,d.k,d.p,key);
+        }
       }
       board.appendChild(cell);
     });
@@ -799,13 +846,158 @@ function updLocks(){
       const can=ow==='S'||ow===G.active;
       if(can){
         cell.classList.remove('locked');
-        cell.onclick=()=>openQ(cat,d.k,d.p,key);
+        cell.onclick=G.challengeKey===key?()=>openChallenge(cat,key):()=>openQ(cat,d.k,d.p,key);
       } else {
         cell.classList.add('locked');
         cell.onclick=null;
       }
     });
   });
+}
+
+// ── CHALLENGE SYSTEM ──
+const CHALLENGE_BANK={
+  21:[ // Sports
+    {icon:'⚽',text:'Name 5 FIFA World Cup winning countries'},
+    {icon:'🏀',text:'Name 4 NBA teams in 15 seconds'},
+    {icon:'🥇',text:'Name 5 Summer Olympic sports'},
+    {icon:'🎾',text:'Name 3 Grand Slam tennis tournaments'},
+    {icon:'🏆',text:'Name 4 players who won Ballon d\'Or more than once'},
+  ],
+  22:[ // Geography
+    {icon:'🌍',text:'Name 5 countries in Africa'},
+    {icon:'🏔️',text:'Name 3 of the world\'s highest mountains'},
+    {icon:'🌊',text:'Name 4 oceans of the world'},
+    {icon:'🗺️',text:'Name 5 capital cities in Europe'},
+    {icon:'🌐',text:'Name 4 countries that border Russia'},
+  ],
+  9:[ // General Knowledge
+    {icon:'🧠',text:'Name 4 languages with over 200 million speakers'},
+    {icon:'💡',text:'Name 3 inventions by Thomas Edison'},
+    {icon:'🎬',text:'Name 4 films that won Best Picture Oscar'},
+    {icon:'📚',text:'Name 3 works by Shakespeare'},
+    {icon:'🌟',text:'Name 4 planets in our solar system in order from the Sun'},
+  ],
+  23:[ // History
+    {icon:'🏛️',text:'Name 3 Roman emperors'},
+    {icon:'⚔️',text:'Name 4 countries involved in World War 1'},
+    {icon:'🗽',text:'Name 3 US presidents from the 1900s'},
+    {icon:'📜',text:'Name 3 events that happened in the 20th century'},
+    {icon:'🌏',text:'Name 4 ancient civilizations'},
+  ],
+  17:[ // Science
+    {icon:'🔬',text:'Name the first 5 elements on the periodic table'},
+    {icon:'🪐',text:'Name all 8 planets in our solar system'},
+    {icon:'⚗️',text:'Name 3 types of chemical bonds'},
+    {icon:'🧬',text:'Name 3 scientists who won the Nobel Prize in Physics'},
+    {icon:'💊',text:'Name 4 human body organs'},
+  ],
+  101:[ // Who's the Player
+    {icon:'🏟️',text:'Describe a footballer without saying their name — teammate guesses'},
+    {icon:'⚽',text:'Name 5 current Ballon d\'Or winners in order'},
+    {icon:'🌍',text:'Name 4 footballers from South America'},
+    {icon:'🧤',text:'Name 3 goalkeepers who won the World Cup'},
+    {icon:'👟',text:'Name 4 players who scored in a World Cup final'},
+  ],
+  102:[ // Jordan
+    {icon:'🇯🇴',text:'Name 3 cities in Jordan'},
+    {icon:'🏺',text:'Name 2 ancient historical sites in Jordan'},
+    {icon:'🌊',text:'Name 2 bodies of water that border Jordan'},
+    {icon:'🤝',text:'Name 2 countries that border Jordan'},
+    {icon:'👑',text:'Name 2 kings of Jordan'},
+  ],
+  103:[ // Boxing
+    {icon:'🥊',text:'Name 5 world heavyweight boxing champions'},
+    {icon:'🏆',text:'Name 3 boxing weight classes'},
+    {icon:'🌍',text:'Name 3 countries famous for producing boxing champions'},
+    {icon:'🎯',text:'Name 2 famous boxing rivalries'},
+    {icon:'⚡',text:'Name 4 undefeated boxing champions in history'},
+  ],
+  104:[ // Guess the Song
+    {icon:'🎵',text:'Hum any song — teammate guesses the song AND artist'},
+    {icon:'🎤',text:'Sing the first line of any famous song — teammate guesses'},
+    {icon:'🎸',text:'Name 4 songs by The Weeknd'},
+    {icon:'🎧',text:'Name 3 Kendrick Lamar albums'},
+    {icon:'🎼',text:'Name 4 artists who performed at the Super Bowl halftime show'},
+  ],
+  105:[ // Custom Questions
+    {icon:'✏️',text:'Name 3 things related to the topic of your custom category'},
+    {icon:'🎯',text:'Describe one of your custom questions — teammate guesses the answer'},
+  ],
+};
+
+let chalTimer=null;
+let chalTimerSec=15;
+
+function openChallenge(cat,key){
+  G.pendKey=key;G.pendCat=cat.name;
+  const pool=CHALLENGE_BANK[cat.id]||CHALLENGE_BANK[9];
+  const chal=pool[Math.floor(Math.random()*pool.length)];
+  const teamName=G.active==='A'?G.tA.name:G.tB.name;
+  const col=G.active==='A'?'var(--team-a)':'var(--team-b)';
+
+  document.getElementById('chalModal').style.display='flex';
+  document.getElementById('chalBody').innerHTML=`
+    <div class="chal-wrap">
+      <div class="chal-badge">⚡ CHALLENGE — ${cat.name}</div>
+      <div style="font-family:var(--font-cond);font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:${col};margin-bottom:12px">${teamName}'s turn</div>
+      <div class="chal-icon">${chal.icon}</div>
+      <div class="chal-title">${chal.text}</div>
+      <div class="chal-pts">Worth <span>6 points</span> if completed · Normal hard question if skipped</div>
+      <div class="chal-btns">
+        <button class="chal-start" onclick="startChallengeTimer(${JSON.stringify(chal).replace(/"/g,'&quot;')})">START ▶</button>
+        <button class="chal-skip" onclick="skipChallenge('${cat.id}')">SKIP — play normal question instead</button>
+      </div>
+    </div>`;
+}
+
+function startChallengeTimer(chal){
+  chalTimerSec=15;
+  document.getElementById('chalBody').innerHTML=`
+    <div class="chal-wrap">
+      <div class="chal-badge">⚡ GO!</div>
+      <div class="chal-icon">${chal.icon}</div>
+      <div class="chal-title">${chal.text}</div>
+      <div class="chal-timer" id="chalTick">15</div>
+      <div class="chal-resolve">
+        <button class="chal-ok" onclick="resolveChallenge(true)">✓ DONE!</button>
+        <button class="chal-fail" onclick="resolveChallenge(false)">✗ FAILED</button>
+      </div>
+    </div>`;
+  chalTimer=setInterval(()=>{
+    chalTimerSec--;
+    const el=document.getElementById('chalTick');
+    if(el){el.textContent=chalTimerSec;if(chalTimerSec<=5)el.classList.add('urgent');}
+    if(chalTimerSec<=0){clearInterval(chalTimer);resolveChallenge(false);}
+  },1000);
+}
+
+async function skipChallenge(catId){
+  document.getElementById('chalModal').style.display='none';
+  // Open a normal hard question from the same category instead
+  const cats=[...G.tA.cats,...G.shared,...G.tB.cats];
+  const cat=cats.find(c=>c.id==catId);
+  if(cat) await openQ(cat,'hard',3,G.pendKey);
+}
+
+function resolveChallenge(success){
+  clearInterval(chalTimer);
+  document.getElementById('chalModal').style.display='none';
+  const team=G.active==='A'?G.tA.name:G.tB.name;
+  G.used[G.pendKey]=true;
+  const cell=document.getElementById(`c-${G.pendKey}`);
+  if(cell){cell.classList.add('used');cell.classList.remove('is-challenge','locked');cell.innerHTML='';cell.onclick=null;}
+  if(success){
+    if(G.active==='A'){G.tA.score+=6;animSc('scA');}else{G.tB.score+=6;animSc('scB');}
+    addLog('correct',`${team} completed the challenge! +6pts`,6);
+    playOk();
+  } else {
+    addLog('wrong',`${team} failed the challenge`,0);
+    boop();
+  }
+  G.active=G.active==='A'?'B':'A';
+  updScore();updLocks();
+  if(Object.keys(G.used).length>=G.totalCells)endGame();
 }
 
 async function openQ(cat,diff,pts,key){
