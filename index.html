@@ -54,6 +54,31 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 @keyframes marquee{0%{background-position:0 0}100%{background-position:60px 0}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
+/* ══ CUSTOM Q SETUP ══ */
+#custom-q-setup{min-height:100vh;display:flex;flex-direction:column}
+#custom-q-setup.active{display:flex}
+.cqs-inner{flex:1;padding:32px 24px;max-width:680px;margin:0 auto;width:100%}
+.cqs-header{text-align:center;margin-bottom:32px}
+.cqs-header h2{font-family:var(--font-display);font-size:2.8rem;color:var(--yellow);letter-spacing:.04em;text-shadow:3px 3px 0 var(--red)}
+.cqs-header p{font-family:var(--font-cond);font-size:.9rem;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-top:6px}
+.cqs-owner{display:inline-block;background:var(--red);color:var(--white);font-family:var(--font-cond);font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 16px;margin-bottom:10px}
+.cqs-block{background:var(--bg2);border:2px solid var(--bg4);border-radius:var(--radius);padding:20px;margin-bottom:16px;position:relative;overflow:hidden}
+.cqs-block::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.cqs-block.easy::before{background:var(--easy)}
+.cqs-block.medium::before{background:var(--med)}
+.cqs-block.hard::before{background:var(--hard)}
+.cqs-diff-label{font-family:var(--font-cond);font-size:.72rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px}
+.cqs-block.easy .cqs-diff-label{color:var(--easy)}
+.cqs-block.medium .cqs-diff-label{color:var(--med)}
+.cqs-block.hard .cqs-diff-label{color:var(--hard)}
+.cqs-field{margin-bottom:10px}
+.cqs-field label{display:block;font-family:var(--font-cond);font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.cqs-field input{width:100%;background:var(--bg3);border:2px solid var(--bg4);border-radius:var(--radius);padding:9px 12px;color:var(--white);font-family:var(--font-body);font-size:.9rem;outline:none;transition:border-color .15s}
+.cqs-field input:focus{border-color:var(--yellow)}
+.cqs-wrong-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.cqs-go-btn{width:100%;padding:14px;background:var(--yellow);color:var(--bg);font-family:var(--font-display);font-size:1.8rem;letter-spacing:.04em;border:none;border-radius:var(--radius);cursor:pointer;box-shadow:4px 4px 0 var(--red);transition:all .15s;margin-top:8px}
+.cqs-go-btn:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--red)}
+
 /* ══ TOAST ══ */
 .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--red);color:var(--white);font-family:var(--font-cond);font-size:1rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:12px 28px;border-radius:var(--radius);box-shadow:4px 4px 0 #8a0010;z-index:9999;opacity:0;transition:all .25s;pointer-events:none}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -449,7 +474,62 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
         <h3><span class="badge" style="background:var(--shared)"></span>Shared Categories <span style="font-weight:400;font-size:.85rem;color:var(--dim);margin-left:6px;text-transform:none;letter-spacing:0">· both teams can pick</span></h3>
         <div class="ig" style="margin-bottom:0"><label>Pick 2 shared categories</label><div class="csg" id="cS"></div><div class="sc-cnt" id="cnS">0 / 2 selected</div></div>
       </div>
-      <div class="sw"><button class="sbtn" id="startBtn" onclick="startGame()">NEXT →</button></div>
+
+      <!-- Custom Questions form for Team A -->
+      <div id="customQFormA" style="display:none">
+        <div class="card" style="border-color:rgba(26,159,255,.3)">
+          <h3 style="color:var(--team-a)">✏️ Team A — Custom Questions</h3>
+          <div class="cqs-block easy" style="margin-bottom:12px">
+            <div class="cqs-diff-label">🟢 Easy — Multiple Choice</div>
+            <div class="cqs-field"><label>Question</label><input id="cq-a-easy-q" type="text" placeholder="e.g. How many players on a football team?"/></div>
+            <div class="cqs-field"><label>✓ Correct Answer</label><input id="cq-a-easy-ans" type="text" placeholder="e.g. 11"/></div>
+            <div class="cqs-wrong-row">
+              <div class="cqs-field"><label>✗ Wrong 1</label><input id="cq-a-easy-w1" type="text" placeholder="e.g. 10"/></div>
+              <div class="cqs-field"><label>✗ Wrong 2</label><input id="cq-a-easy-w2" type="text" placeholder="e.g. 9"/></div>
+              <div class="cqs-field"><label>✗ Wrong 3</label><input id="cq-a-easy-w3" type="text" placeholder="e.g. 12"/></div>
+            </div>
+          </div>
+          <div class="cqs-block medium" style="margin-bottom:12px">
+            <div class="cqs-diff-label">🟡 Medium — Open Answer</div>
+            <div class="cqs-field"><label>Question</label><input id="cq-a-med-q" type="text" placeholder="e.g. Who won the 2022 World Cup?"/></div>
+            <div class="cqs-field"><label>✓ Correct Answer</label><input id="cq-a-med-ans" type="text" placeholder="e.g. Argentina"/></div>
+          </div>
+          <div class="cqs-block hard">
+            <div class="cqs-diff-label">🔴 Hard — Open Answer</div>
+            <div class="cqs-field"><label>Question</label><input id="cq-a-hard-q" type="text" placeholder="e.g. Who scored the most goals in 2023?"/></div>
+            <div class="cqs-field"><label>✓ Correct Answer</label><input id="cq-a-hard-ans" type="text" placeholder="e.g. Erling Haaland"/></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Custom Questions form for Team B -->
+      <div id="customQFormB" style="display:none">
+        <div class="card" style="border-color:rgba(255,92,26,.3)">
+          <h3 style="color:var(--team-b)">✏️ Team B — Custom Questions</h3>
+          <div class="cqs-block easy" style="margin-bottom:12px">
+            <div class="cqs-diff-label">🟢 Easy — Multiple Choice</div>
+            <div class="cqs-field"><label>Question</label><input id="cq-b-easy-q" type="text" placeholder="e.g. How many players on a football team?"/></div>
+            <div class="cqs-field"><label>✓ Correct Answer</label><input id="cq-b-easy-ans" type="text" placeholder="e.g. 11"/></div>
+            <div class="cqs-wrong-row">
+              <div class="cqs-field"><label>✗ Wrong 1</label><input id="cq-b-easy-w1" type="text" placeholder="e.g. 10"/></div>
+              <div class="cqs-field"><label>✗ Wrong 2</label><input id="cq-b-easy-w2" type="text" placeholder="e.g. 9"/></div>
+              <div class="cqs-field"><label>✗ Wrong 3</label><input id="cq-b-easy-w3" type="text" placeholder="e.g. 12"/></div>
+            </div>
+          </div>
+          <div class="cqs-block medium" style="margin-bottom:12px">
+            <div class="cqs-diff-label">🟡 Medium — Open Answer</div>
+            <div class="cqs-field"><label>Question</label><input id="cq-b-med-q" type="text" placeholder="e.g. Who won the 2022 World Cup?"/></div>
+            <div class="cqs-field"><label>✓ Correct Answer</label><input id="cq-b-med-ans" type="text" placeholder="e.g. Argentina"/></div>
+          </div>
+          <div class="cqs-block hard">
+            <div class="cqs-diff-label">🔴 Hard — Open Answer</div>
+            <div class="cqs-field"><label>Question</label><input id="cq-b-hard-q" type="text" placeholder="e.g. Who scored the most goals in 2023?"/></div>
+            <div class="cqs-field"><label>✓ Correct Answer</label><input id="cq-b-hard-ans" type="text" placeholder="e.g. Erling Haaland"/></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sw"><button class="sbtn" id="startBtn" onclick="startGame()">START GAME ▶</button></div>
     </div>
   </div>
   <div class="stripe"></div>
@@ -500,7 +580,7 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   <div class="mdl">
     <div class="mdl-stripe"></div>
     <div class="mdl-inner">
-      <button class="mclose" id="mCloseBtn" onclick="closeQ(false)">✕ Close</button>
+      <button class="mclose" id="mCloseBtn" onclick="closeQ(true)">✕ Close</button>
       <div class="mhead">
         <div class="mmeta">
           <span class="mdiff-pill" id="mDiffPill">Easy</span>
@@ -523,68 +603,6 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   </div>
 </div>
 
-<!-- QUESTION EDITOR -->
-<div class="screen" id="editor">
-  <div class="stripe"></div>
-  <div class="editor-inner">
-    <div class="editor-header">
-      <div>
-        <h2>ADD YOUR QUESTIONS</h2>
-        <div class="editor-sub">Optional — your questions go first, API fills the rest</div>
-      </div>
-      <div class="editor-actions">
-        <button class="play-btn" onclick="launchGame()">LET'S PLAY ▶</button>
-      </div>
-    </div>
-
-    <!-- category tabs -->
-    <div class="cat-tabs" id="edCatTabs"></div>
-
-    <!-- difficulty tabs -->
-    <div class="diff-tabs">
-      <button class="diff-tab dt-easy active-diff" onclick="setEdDiff('easy',this)">🟢 Easy — MCQ</button>
-      <button class="diff-tab dt-medium" onclick="setEdDiff('medium',this)">🟡 Medium — Open</button>
-      <button class="diff-tab dt-hard" onclick="setEdDiff('hard',this)">🔴 Hard — Open</button>
-    </div>
-
-    <!-- existing questions list -->
-    <div class="q-list" id="edQList"></div>
-
-    <!-- add form -->
-    <div class="add-form">
-      <div class="add-form-title" id="edFormTitle">+ ADD EASY QUESTION (MULTIPLE CHOICE)</div>
-      <div class="form-row single">
-        <div class="form-field">
-          <label>Question</label>
-          <input id="edQ" type="text" placeholder="e.g. How many players are on a football team?"/>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-field">
-          <label>✓ Correct Answer</label>
-          <input id="edAns" type="text" placeholder="e.g. 11" class="correct-inp"/>
-        </div>
-        <div class="form-field" id="edWrongWrap1" style="display:none">
-          <label>✗ Wrong Option 1</label>
-          <input id="edW1" type="text" placeholder="e.g. 10"/>
-        </div>
-      </div>
-      <div class="wrong-fields" id="edWrongFields">
-        <div class="form-field">
-          <label>✗ Wrong Option 2</label>
-          <input id="edW2" type="text" placeholder="e.g. 9"/>
-        </div>
-        <div class="form-field">
-          <label>✗ Wrong Option 3</label>
-          <input id="edW3" type="text" placeholder="e.g. 12"/>
-        </div>
-      </div>
-      <button class="add-q-btn" onclick="addCustomQ()">+ ADD QUESTION</button>
-    </div>
-    <div class="total-counter" id="edTotal">Total custom questions: <span>0</span></div>
-  </div>
-  <div class="stripe"></div>
-</div>
 
 <script>
 // ── EDITOR STATE ── (functions defined after main game vars below)
@@ -593,19 +611,21 @@ let edDiff='easy';
 
 // Category types: 'api' = fetches from OpenTDB, 'custom' = JSON/editor only
 const CATS=[
-  {id:21,  name:"Sports",          icon:"⚽", type:"api"},
-  {id:22,  name:"Geography",       icon:"🌍", type:"api"},
-  {id:9,   name:"General Knowledge",icon:"🧠",type:"api"},
-  {id:23,  name:"History",         icon:"🏛️", type:"api"},
-  {id:17,  name:"Science",         icon:"🔬", type:"api"},
-  {id:101, name:"Who's the Player",icon:"🏟️", type:"custom"},
-  {id:102, name:"Jordan",          icon:"🇯🇴", type:"custom"},
-  {id:103, name:"Boxing",          icon:"🥊", type:"custom"},
-  {id:104, name:"Guess the Song",  icon:"🎵", type:"custom"},
+  {id:21,  name:"Sports",           icon:"⚽", type:"api"},
+  {id:22,  name:"Geography",        icon:"🌍", type:"api"},
+  {id:9,   name:"General Knowledge",icon:"🧠", type:"api"},
+  {id:23,  name:"History",          icon:"🏛️", type:"api"},
+  {id:17,  name:"Science",          icon:"🔬", type:"api"},
+  {id:101, name:"Who's the Player", icon:"🏟️", type:"custom"},
+  {id:102, name:"Jordan",           icon:"🇯🇴", type:"custom"},
+  {id:103, name:"Boxing",           icon:"🥊", type:"custom"},
+  {id:104, name:"Guess the Song",   icon:"🎵", type:"custom"},
+  {id:105, name:"Custom Questions", icon:"✏️", type:"custom"},
 ];
 const DIFF_TYPE={easy:'mcq',medium:'open',hard:'open'};
 const BANK={};
-const CUSTOM_BANK={}; // custom questions added by host, keyed "catId-diff"
+const CUSTOM_BANK={}; // embedded + JSON questions loaded at startup
+const SESSION_BANK={}; // questions added by host through the editor this session
 let G={
   tA:{name:'Team A',cats:[],score:0},tB:{name:'Team B',cats:[],score:0},
   shared:[],active:'A',used:{},totalCells:0,
@@ -630,16 +650,40 @@ function buildPickers(){
 buildPickers();
 
 function tog(cat,panel,btn){
+  // block Custom Questions (105) from shared categories
+  if(cat.id===105&&panel==='cS'){
+    showToast('⚠️ Custom Questions can only be an exclusive team category!');
+    return;
+  }
   const arr=panel==='cA'?selA:panel==='cB'?selB:selS;
   const cls=panel==='cA'?'sa':panel==='cB'?'sb':'ss';
   const idx=arr.findIndex(x=>x.id===cat.id);
-  if(idx>-1){arr.splice(idx,1);btn.classList.remove(cls);}
+  const wasSelected=idx>-1;
+  if(wasSelected){arr.splice(idx,1);btn.classList.remove(cls);}
   else{
     if(arr.length>=2)return;
     if([...selA,...selB,...selS].find(x=>x.id===cat.id))return;
-    arr.push(cat);btn.classList.add(cls);
+    arr.push({...cat}); // push a copy, not a reference
+    btn.classList.add(cls);
   }
-  updCnt();refDis();valStart();
+  updCnt();refDis();
+  // show/hide custom question forms
+  const hasA=!!selA.find(c=>c.id===105);
+  const hasB=!!selB.find(c=>c.id===105);
+  const formA=document.getElementById('customQFormA');
+  const formB=document.getElementById('customQFormB');
+  if(formA){
+    formA.style.display=hasA?'block':'none';
+    if(!hasA)['cq-a-easy-q','cq-a-easy-ans','cq-a-easy-w1','cq-a-easy-w2','cq-a-easy-w3','cq-a-med-q','cq-a-med-ans','cq-a-hard-q','cq-a-hard-ans'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    // only scroll when cat 105 is being selected (not deselected)
+    if(cat.id===105&&panel==='cA'&&!wasSelected)setTimeout(()=>formA.scrollIntoView({behavior:'smooth',block:'start'}),50);
+  }
+  if(formB){
+    formB.style.display=hasB?'block':'none';
+    if(!hasB)['cq-b-easy-q','cq-b-easy-ans','cq-b-easy-w1','cq-b-easy-w2','cq-b-easy-w3','cq-b-med-q','cq-b-med-ans','cq-b-hard-q','cq-b-hard-ans'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    if(cat.id===105&&panel==='cB'&&!wasSelected)setTimeout(()=>formB.scrollIntoView({behavior:'smooth',block:'start'}),50);
+  }
+  valStart();
 }
 function updCnt(){
   ['A','B','S'].forEach(x=>{const arr=x==='A'?selA:x==='B'?selB:selS;document.getElementById('cn'+x).textContent=`${arr.length} / 2 selected`;});
@@ -667,36 +711,82 @@ document.getElementById('nB').oninput=valStart;
 function startGame(){
   const nameA=document.getElementById('nA').value.trim();
   const nameB=document.getElementById('nB').value.trim();
-  if(!nameA||!nameB){showToast('⚠️ Enter both team names first!');return;}
+  if(!nameA||!nameB){
+    showToast('⚠️ Enter both team names first!');
+    window.scrollTo({top:0,behavior:'smooth'});
+    return;
+  }
   if(selA.length<2){showToast(`⚠️ ${nameA} needs 2 categories!`);return;}
   if(selB.length<2){showToast(`⚠️ ${nameB} needs 2 categories!`);return;}
   if(selS.length<2){showToast('⚠️ Pick 2 shared categories!');return;}
+
+  const allCats=[...selA,...selB,...selS];
+
+  // validate + save custom questions for Team A if they picked cat 105
+  if(selA.find(c=>c.id===105)){
+    const eq=document.getElementById('cq-a-easy-q').value.trim();
+    const ea=document.getElementById('cq-a-easy-ans').value.trim();
+    const ew1=document.getElementById('cq-a-easy-w1').value.trim();
+    const ew2=document.getElementById('cq-a-easy-w2').value.trim();
+    const ew3=document.getElementById('cq-a-easy-w3').value.trim();
+    const mq=document.getElementById('cq-a-med-q').value.trim();
+    const ma=document.getElementById('cq-a-med-ans').value.trim();
+    const hq=document.getElementById('cq-a-hard-q').value.trim();
+    const ha=document.getElementById('cq-a-hard-ans').value.trim();
+    if(!eq||!ea||!ew1||!ew2||!ew3){showToast('⚠️ Team A: Fill in the Easy question + all 4 options!');document.getElementById('customQFormA').scrollIntoView({behavior:'smooth'});return;}
+    if(!mq||!ma){showToast('⚠️ Team A: Fill in the Medium question!');document.getElementById('customQFormA').scrollIntoView({behavior:'smooth'});return;}
+    if(!hq||!ha){showToast('⚠️ Team A: Fill in the Hard question!');document.getElementById('customQFormA').scrollIntoView({behavior:'smooth'});return;}
+    if(!SESSION_BANK['105-easy'])SESSION_BANK['105-easy']=[];
+    if(!SESSION_BANK['105-medium'])SESSION_BANK['105-medium']=[];
+    if(!SESSION_BANK['105-hard'])SESSION_BANK['105-hard']=[];
+    SESSION_BANK['105-easy'].push({question:eq,correct:ea,options:shuffle([ea,ew1,ew2,ew3])});
+    SESSION_BANK['105-medium'].push({question:mq,correct:ma,options:null});
+    SESSION_BANK['105-hard'].push({question:hq,correct:ha,options:null});
+  }
+
+  // validate + save custom questions for Team B if they picked cat 105
+  if(selB.find(c=>c.id===105)){
+    const eq=document.getElementById('cq-b-easy-q').value.trim();
+    const ea=document.getElementById('cq-b-easy-ans').value.trim();
+    const ew1=document.getElementById('cq-b-easy-w1').value.trim();
+    const ew2=document.getElementById('cq-b-easy-w2').value.trim();
+    const ew3=document.getElementById('cq-b-easy-w3').value.trim();
+    const mq=document.getElementById('cq-b-med-q').value.trim();
+    const ma=document.getElementById('cq-b-med-ans').value.trim();
+    const hq=document.getElementById('cq-b-hard-q').value.trim();
+    const ha=document.getElementById('cq-b-hard-ans').value.trim();
+    if(!eq||!ea||!ew1||!ew2||!ew3){showToast('⚠️ Team B: Fill in the Easy question + all 4 options!');document.getElementById('customQFormB').scrollIntoView({behavior:'smooth'});return;}
+    if(!mq||!ma){showToast('⚠️ Team B: Fill in the Medium question!');document.getElementById('customQFormB').scrollIntoView({behavior:'smooth'});return;}
+    if(!hq||!ha){showToast('⚠️ Team B: Fill in the Hard question!');document.getElementById('customQFormB').scrollIntoView({behavior:'smooth'});return;}
+    if(!SESSION_BANK['105-easy'])SESSION_BANK['105-easy']=[];
+    if(!SESSION_BANK['105-medium'])SESSION_BANK['105-medium']=[];
+    if(!SESSION_BANK['105-hard'])SESSION_BANK['105-hard']=[];
+    SESSION_BANK['105-easy'].push({question:eq,correct:ea,options:shuffle([ea,ew1,ew2,ew3])});
+    SESSION_BANK['105-medium'].push({question:mq,correct:ma,options:null});
+    SESSION_BANK['105-hard'].push({question:hq,correct:ha,options:null});
+  }
+
   G.tA.name=nameA;G.tB.name=nameB;
   G.tA.cats=[...selA];G.tB.cats=[...selB];G.shared=[...selS];
   G.tA.score=0;G.tB.score=0;G.used={};G.active='A';
   G.challengeKeys=null;
-  G.totalCells=[...G.tA.cats,...G.tB.cats,...G.shared].length*3;
-  showScreen('editor');
-  renderEditor();
-  setTimeout(()=>{
-    const el=document.getElementById('editor');
-    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
-  },50);
+  G.totalCells=allCats.length*3;
+  launchGame();
 }
 
 function launchGame(){
-  // hide editor screen completely so it doesn't show during the game
-  const edScreen=document.getElementById('editor');
-  if(edScreen)edScreen.style.display='none';
-  // reset log
   const log=document.getElementById('gameLog');
   if(log){log.innerHTML='<div class="log-title">📋 Live Game Log</div><div class="log-empty" id="logEmpty">Game hasn\'t started yet — make your first pick!</div>';}
-  showScreen('game');renderBoard();updScore();
+  showScreen('game');
+  renderBoard();updScore();
+  setTimeout(()=>document.getElementById('game').scrollIntoView({behavior:'smooth',block:'start'}),100);
 }
 
 async function getQuestion(catId,diff){
   const key=`${catId}-${diff}`;
-  // custom questions first (always)
+  // session questions first (added via editor this session)
+  if(SESSION_BANK[key]&&SESSION_BANK[key].length>0)return SESSION_BANK[key].shift();
+  // then embedded questions
   if(CUSTOM_BANK[key]&&CUSTOM_BANK[key].length>0)return CUSTOM_BANK[key].shift();
   // custom-only categories (id >= 100) don't use API
   if(catId>=100)return null;
@@ -775,12 +865,20 @@ function updLocks(){
   const cats=[...G.tA.cats,...G.tB.cats,...G.shared];
   [{k:'easy',p:1},{k:'medium',p:2},{k:'hard',p:3}].forEach(d=>{
     cats.forEach(cat=>{
-      const key=`${cat.id}-${d.k}`;if(G.used[key])return;
-      const cell=document.getElementById(`c-${key}`);if(!cell)return;
-      const ow=ownerOf(cat.id);const can=ow==='S'||ow===G.active;
-      cell.classList.toggle('locked',!can);
+      const key=`${cat.id}-${d.k}`;
+      if(G.used[key])return;
+      const cell=document.getElementById(`c-${key}`);
+      if(!cell)return;
+      const ow=ownerOf(cat.id);
+      const can=ow==='S'||ow===G.active;
       const isChallenge=G.challengeKeys&&G.challengeKeys.has(key);
-      cell.onclick=can?(isChallenge?()=>openChallenge(key,d.p):()=>openQ(cat,d.k,d.p,key)):null;
+      if(can){
+        cell.classList.remove('locked');
+        cell.onclick=isChallenge?()=>openChallenge(key,d.p):()=>openQ(cat,d.k,d.p,key);
+      } else {
+        cell.classList.add('locked');
+        cell.onclick=null;
+      }
     });
   });
 }
@@ -928,7 +1026,8 @@ function renderHA(phase){
     ha.appendChild(mk('✗ No Steal','w',()=>{
       const tName=G.active==='A'?G.tA.name:G.tB.name;
       addLog('wrong',`${tName} got it wrong — no steal either`);
-      showPop('wrong',G.active,false);closeQ(true);
+      showPop('wrong',G.active,false);
+      closeQ(true);
     }));
   }
 }
@@ -955,10 +1054,23 @@ function award(team,pts,isSteal){
   } else {
     addLog('correct',`${tName} answered ${catName} ${diffLabel} correctly`,pts);
   }
+  // mark cell used and switch turn IMMEDIATELY so board locks right away
+  G.used[G.pendKey]=true;
+  const cell=document.getElementById(`c-${G.pendKey}`);
+  if(cell){cell.classList.add('used');cell.classList.remove('locked');cell.innerHTML='';cell.onclick=null;}
+  G.active=G.active==='A'?'B':'A';
+  updScore();updLocks();
+  // then show popup and close modal after delay
   showPop('correct',team,isSteal);
   setTimeout(()=>{
     if(team==='A'){G.tA.score+=pts;animSc('scA');}else{G.tB.score+=pts;animSc('scB');}
-    playOk();closeQ(true);
+    playOk();
+    stopTimer();
+    stopAudio();
+    document.getElementById('modal').classList.remove('open');
+    document.getElementById('mBody').innerHTML='';
+    G.curQ=null;
+    if(Object.keys(G.used).length>=G.totalCells)endGame();
   },1700);
 }
 
@@ -1045,11 +1157,18 @@ function endGame(){
 function playAgain(){
   selA=[];selB=[];selS=[];
   G.challengeKeys=null;
-  // restore editor display in case it was hidden
-  const edScreen=document.getElementById('editor');
-  if(edScreen)edScreen.style.display='';
-  document.getElementById('nA').value='';document.getElementById('nB').value='';
-  buildPickers();updCnt();valStart();showScreen('setup');
+  document.getElementById('nA').value='';
+  document.getElementById('nB').value='';
+  // hide and clear both custom question forms
+  ['customQFormA','customQFormB'].forEach(fid=>{
+    const form=document.getElementById(fid);
+    if(form){form.style.display='none';}
+  });
+  ['cq-a-easy-q','cq-a-easy-ans','cq-a-easy-w1','cq-a-easy-w2','cq-a-easy-w3','cq-a-med-q','cq-a-med-ans','cq-a-hard-q','cq-a-hard-ans',
+   'cq-b-easy-q','cq-b-easy-ans','cq-b-easy-w1','cq-b-easy-w2','cq-b-easy-w3','cq-b-med-q','cq-b-med-ans','cq-b-hard-q','cq-b-hard-ans'
+  ].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  buildPickers();updCnt();valStart();
+  showScreen('setup');
 }
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
 
@@ -1304,6 +1423,38 @@ function resolveChallenge(success){
   }
 }
 
+function renderCustomQSetup(ownerName){
+  document.getElementById('cqsOwner').textContent=ownerName+' chose Custom Questions';
+  // clear fields
+  ['cq-easy-q','cq-easy-ans','cq-easy-w1','cq-easy-w2','cq-easy-w3',
+   'cq-med-q','cq-med-ans','cq-hard-q','cq-hard-ans'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+}
+
+function submitCustomQs(){
+  const eq=document.getElementById('cq-easy-q').value.trim();
+  const ea=document.getElementById('cq-easy-ans').value.trim();
+  const ew1=document.getElementById('cq-easy-w1').value.trim();
+  const ew2=document.getElementById('cq-easy-w2').value.trim();
+  const ew3=document.getElementById('cq-easy-w3').value.trim();
+  const mq=document.getElementById('cq-med-q').value.trim();
+  const ma=document.getElementById('cq-med-ans').value.trim();
+  const hq=document.getElementById('cq-hard-q').value.trim();
+  const ha=document.getElementById('cq-hard-ans').value.trim();
+
+  if(!eq||!ea||!ew1||!ew2||!ew3){showToast('⚠️ Fill in the Easy question and all 4 options!');return;}
+  if(!mq||!ma){showToast('⚠️ Fill in the Medium question and answer!');return;}
+  if(!hq||!ha){showToast('⚠️ Fill in the Hard question and answer!');return;}
+
+  // save into SESSION_BANK under cat 105
+  SESSION_BANK['105-easy']=[{question:eq,correct:ea,options:shuffle([ea,ew1,ew2,ew3])}];
+  SESSION_BANK['105-medium']=[{question:mq,correct:ma,options:null}];
+  SESSION_BANK['105-hard']=[{question:hq,correct:ha,options:null}];
+
+  launchGame();
+}
+
 function renderEditor(){
   const cats=[...G.tA.cats,...G.tB.cats,...G.shared];
   edCat=cats[0];
@@ -1350,7 +1501,7 @@ function updateFormMode(){
 function renderQList(){
   if(!edCat)return;
   const key=`${edCat.id}-${edDiff}`;
-  const qs=CUSTOM_BANK[key]||[];
+  const qs=SESSION_BANK[key]||[];
   const list=document.getElementById('edQList');
   if(qs.length===0){
     list.innerHTML=`<div class="q-empty">No custom questions yet for this slot</div>`;
@@ -1378,15 +1529,15 @@ function addCustomQ(){
   const ans=document.getElementById('edAns').value.trim();
   if(!q||!ans){alert('Please fill in the question and correct answer.');return;}
   const key=`${edCat.id}-${edDiff}`;
-  if(!CUSTOM_BANK[key])CUSTOM_BANK[key]=[];
+  if(!SESSION_BANK[key])SESSION_BANK[key]=[];
   if(edDiff==='easy'){
     const w1=document.getElementById('edW1').value.trim();
     const w2=document.getElementById('edW2').value.trim();
     const w3=document.getElementById('edW3').value.trim();
     if(!w1||!w2||!w3){alert('Easy questions need 3 wrong options for MCQ.');return;}
-    CUSTOM_BANK[key].push({question:q,correct:ans,options:shuffle([ans,w1,w2,w3])});
+    SESSION_BANK[key].push({question:q,correct:ans,options:shuffle([ans,w1,w2,w3])});
   } else {
-    CUSTOM_BANK[key].push({question:q,correct:ans,options:null});
+    SESSION_BANK[key].push({question:q,correct:ans,options:null});
   }
   ['edQ','edAns','edW1','edW2','edW3'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('edQ').focus();
@@ -1394,15 +1545,15 @@ function addCustomQ(){
 }
 
 function deleteCustomQ(key,idx){
-  if(CUSTOM_BANK[key])CUSTOM_BANK[key].splice(idx,1);
+  if(SESSION_BANK[key])SESSION_BANK[key].splice(idx,1);
   renderQList();
 }
 
 function updEdTotal(){
   let total=0;
-  Object.values(CUSTOM_BANK).forEach(arr=>total+=arr.length);
+  Object.values(SESSION_BANK).forEach(arr=>total+=arr.length);
   const el=document.getElementById('edTotal');
-  if(el)el.innerHTML=`Total custom questions: <span>${total}</span>`;
+  if(el)el.innerHTML=`Custom questions added this session: <span>${total}</span>`;
 }
 
 // ── EMBEDDED QUESTION BANK ──
