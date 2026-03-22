@@ -212,8 +212,6 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .log-entry.wrong .log-text{color:var(--red3)}
 .log-entry.steal .log-text{color:var(--yellow2)}
 .log-entry.steal .log-pts{color:var(--yellow2)}
-.log-entry.challenge .log-text{color:var(--yellow)}
-.log-entry.challenge .log-pts{color:var(--yellow)}
 .log-entry.skip .log-text{color:var(--dim)}
 
 /* ══ MODAL ══ */
@@ -297,53 +295,6 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
 .mspinner{width:38px;height:38px;border:4px solid var(--bg4);border-top-color:var(--yellow);border-radius:50%;animation:spin .7s linear infinite}
 .mload p{font-family:var(--font-cond);font-size:.9rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
 
-/* challenge wildcard cell */
-.qc.challenge{background:linear-gradient(135deg,#1a0a00,#3d1800);border:2px solid var(--yellow);animation:cPulse 2s ease-in-out infinite}
-@keyframes cPulse{0%,100%{border-color:var(--yellow);box-shadow:0 0 0 0 rgba(245,200,0,.4)}50%{border-color:var(--yellow2);box-shadow:0 0 12px 4px rgba(245,200,0,.2)}}
-.qc.challenge .pl{font-size:1.6rem}
-.qc.challenge .dlabel{color:var(--yellow);opacity:1;font-size:.65rem}
-
-/* ══ CHALLENGE / BETTING MODAL ══ */
-.cmo{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:300;display:none;align-items:center;justify-content:center;padding:16px}
-.cmo.open{display:flex}
-.cmdl{background:var(--bg2);border:4px solid var(--yellow);border-radius:var(--radius);max-width:700px;width:100%;animation:fadeUp .25s ease;position:relative;overflow:hidden}
-.cmdl-stripe{height:6px;background:repeating-linear-gradient(90deg,var(--red) 0,var(--red) 15px,var(--yellow) 15px,var(--yellow) 30px,var(--white) 30px,var(--white) 45px);animation:marquee 1s linear infinite}
-.cmdl-inner{padding:28px 32px 32px}
-
-/* phase: reveal */
-.ch-reveal{text-align:center;padding:12px 0 24px}
-.ch-icon{font-size:4rem;display:block;margin-bottom:8px}
-.ch-label{font-family:var(--font-display);font-size:1rem;letter-spacing:.2em;color:var(--yellow);margin-bottom:4px}
-.ch-title{font-family:var(--font-display);font-size:3rem;color:var(--white);line-height:1.1;margin-bottom:8px}
-.ch-desc{font-family:var(--font-cond);font-size:1.1rem;color:var(--dim);line-height:1.4}
-
-/* phase: bidding */
-.bid-area{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
-.bid-card{background:var(--bg3);border:2px solid var(--bg4);border-radius:var(--radius);padding:16px;text-align:center}
-.bid-card .bname{font-family:var(--font-cond);font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
-.bid-card .bnum{font-family:var(--font-display);font-size:3.5rem;line-height:1;margin-bottom:10px}
-.bid-card.ba .bnum{color:var(--team-a)}.bid-card.bb .bnum{color:var(--team-b)}
-.bid-card.active-bid{border-color:var(--yellow);background:rgba(245,200,0,.05)}
-.bid-card.winner-bid{border-color:var(--yellow);background:rgba(245,200,0,.08);box-shadow:0 0 20px rgba(245,200,0,.2)}
-.bid-btns{display:flex;gap:8px;justify-content:center}
-.bid-btn{padding:8px 20px;font-family:var(--font-display);font-size:1.2rem;border:none;border-radius:var(--radius);cursor:pointer;transition:all .12s}
-.bid-btn.up{background:var(--yellow);color:var(--bg);box-shadow:2px 2px 0 #8a6d00}.bid-btn.up:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 #8a6d00}
-.bid-btn.pass{background:var(--bg4);color:var(--dim);border:2px solid var(--bg4)}.bid-btn.pass:hover{border-color:var(--dim);color:var(--white)}
-.bid-btn:disabled{opacity:.3;pointer-events:none}
-.bid-status{font-family:var(--font-cond);font-size:.9rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-align:center;color:var(--yellow);margin-bottom:8px;min-height:1.4em}
-.bid-turn-indicator{font-family:var(--font-cond);font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-align:center;color:var(--dim);margin-bottom:16px}
-
-/* phase: countdown */
-.ctimer-wrap{text-align:center;padding:8px 0 20px}
-.ctimer-num{font-family:var(--font-display);font-size:7rem;line-height:1;color:var(--yellow)}
-.ctimer-num.urg{color:var(--red);animation:tPulse .4s ease-in-out infinite}
-.ctimer-bar-w{width:100%;height:8px;background:var(--bg3);border-radius:4px;margin:8px 0 20px}
-.ctimer-bar{height:100%;border-radius:4px;background:var(--yellow);transition:width 1s linear,background .4s}
-.ctimer-team{font-family:var(--font-cond);font-size:1rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
-.ctimer-target{font-family:var(--font-display);font-size:1.8rem;color:var(--white);margin-bottom:16px}
-.start-timer-btn{display:block;width:100%;padding:16px;background:var(--yellow);color:var(--bg);font-family:var(--font-display);font-size:2rem;letter-spacing:.06em;border:none;border-radius:var(--radius);cursor:pointer;box-shadow:4px 4px 0 var(--red);transition:all .15s;margin-bottom:16px}
-.start-timer-btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--red)}
-.start-timer-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:2px 2px 0 var(--dim2)}
 
 /* ══ RESULT POPUP ══ */
 .rpop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:500;pointer-events:none;background:var(--bg);border-radius:var(--radius);padding:28px 56px;text-align:center;min-width:280px;display:none}
@@ -595,13 +546,6 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   </div>
 </div>
 
-<!-- CHALLENGE / BETTING MODAL -->
-<div class="cmo" id="cModal">
-  <div class="cmdl">
-    <div class="cmdl-stripe"></div>
-    <div class="cmdl-inner" id="cBody"></div>
-  </div>
-</div>
 
 
 <script>
@@ -769,7 +713,6 @@ function startGame(){
   G.tA.name=nameA;G.tB.name=nameB;
   G.tA.cats=[...selA];G.tB.cats=[...selB];G.shared=[...selS];
   G.tA.score=0;G.tB.score=0;G.used={};G.active='A';
-  G.challengeKeys=null;
   G.totalCells=allCats.length*3;
   launchGame();
 }
@@ -828,33 +771,16 @@ function renderBoard(){
     board.appendChild(h);
   });
 
-  // Randomly pick 2 cells to be challenge cells (one from medium row, one from hard row)
-  // stored in G.challengeKeys so they persist across re-renders
-  if(!G.challengeKeys){
-    const medCats=shuffle([...cats]);
-    const hardCats=shuffle([...cats]);
-    G.challengeKeys=new Set([
-      `${medCats[0].id}-medium`,
-      `${hardCats[1%hardCats.length].id}-hard`
-    ]);
-  }
-
   [{k:'easy',l:'Easy',p:1},{k:'medium',l:'Medium',p:2},{k:'hard',l:'Hard',p:3}].forEach(d=>{
     cats.forEach(cat=>{
       const key=`${cat.id}-${d.k}`;
       const used=G.used[key];const ow=ownerOf(cat.id);const can=ow==='S'||ow===G.active;
-      const isChallenge=G.challengeKeys&&G.challengeKeys.has(key)&&!used;
       const cell=document.createElement('div');
-      cell.className=`qc ${d.k}${used?' used':''}${(!used&&!can)?' locked':''}${isChallenge?' challenge':''}`;
+      cell.className=`qc ${d.k}${used?' used':''}${(!used&&!can)?' locked':''}`;
       cell.id=`c-${key}`;
       if(!used){
-        if(isChallenge){
-          cell.innerHTML=`<span class="pl">⚡</span><span class="dlabel">CHALLENGE</span>`;
-          if(can)cell.onclick=()=>openChallenge(key,d.p);
-        } else {
-          cell.innerHTML=`<span class="pl">${d.p}</span><span class="dlabel">${d.l}</span>`;
-          if(can)cell.onclick=()=>openQ(cat,d.k,d.p,key);
-        }
+        cell.innerHTML=`<span class="pl">${d.p}</span><span class="dlabel">${d.l}</span>`;
+        if(can)cell.onclick=()=>openQ(cat,d.k,d.p,key);
       }
       board.appendChild(cell);
     });
@@ -871,10 +797,9 @@ function updLocks(){
       if(!cell)return;
       const ow=ownerOf(cat.id);
       const can=ow==='S'||ow===G.active;
-      const isChallenge=G.challengeKeys&&G.challengeKeys.has(key);
       if(can){
         cell.classList.remove('locked');
-        cell.onclick=isChallenge?()=>openChallenge(key,d.p):()=>openQ(cat,d.k,d.p,key);
+        cell.onclick=()=>openQ(cat,d.k,d.p,key);
       } else {
         cell.classList.add('locked');
         cell.onclick=null;
@@ -1118,7 +1043,7 @@ function addLog(type,text,pts){
   const entries=log.querySelectorAll('.log-entry');
   if(entries.length>=LOG_MAX)entries[0].remove();
 
-  const icons={correct:'✅',wrong:'❌',steal:'⚡',challenge:'🎯',skip:'⏭️'};
+  const icons={correct:'✅',wrong:'❌',steal:'⚡',skip:'⏭️'};
   const div=document.createElement('div');
   div.className=`log-entry ${type}`;
   div.innerHTML=`
@@ -1156,7 +1081,6 @@ function endGame(){
 
 function playAgain(){
   selA=[];selB=[];selS=[];
-  G.challengeKeys=null;
   document.getElementById('nA').value='';
   document.getElementById('nB').value='';
   // hide and clear both custom question forms
@@ -1179,248 +1103,6 @@ function confetti(){
     c.style.cssText=`left:${Math.random()*100}vw;background:${cols[~~(Math.random()*cols.length)]};animation-duration:${1.8+Math.random()*2}s;animation-delay:${Math.random()*.4}s;transform:rotate(${Math.random()*360}deg);width:${6+Math.random()*8}px;height:${8+Math.random()*10}px`;
     document.body.appendChild(c);c.addEventListener('animationend',()=>c.remove());
   },i*20);
-}
-
-// ── CHALLENGE BANK ──
-const CHALLENGES=[
-  {icon:'⚽',title:'Name Footballers',desc:'Name as many professional footballers as you can!'},
-  {icon:'🎬',title:'Name Movies',desc:'Name as many movies as you can!'},
-  {icon:'🌍',title:'Name Countries',desc:'Name as many countries in the world as you can!'},
-  {icon:'🎵',title:'Name Artists',desc:'Name as many music artists or bands as you can!'},
-  {icon:'🏀',title:'Name NBA Players',desc:'Name as many NBA players as you can!'},
-  {icon:'📺',title:'Name TV Shows',desc:'Name as many TV shows as you can!'},
-  {icon:'🦁',title:'Name Animals',desc:'Name as many animals as you can!'},
-  {icon:'🍕',title:'Name Foods',desc:'Name as many dishes or foods as you can!'},
-  {icon:'🏆',title:'Name Champions League Winners',desc:'Name as many UEFA Champions League winning clubs as you can!'},
-  {icon:'🎮',title:'Name Video Games',desc:'Name as many video games as you can!'},
-  {icon:'🗺️',title:'Name Capital Cities',desc:'Name as many capital cities as you can!'},
-  {icon:'🦸',title:'Name Superheroes',desc:'Name as many superheroes as you can!'},
-];
-
-// challenge state
-let C={
-  key:'',pts:0,
-  challenge:null,
-  bidA:0,bidB:0,
-  bidTurn:'A',   // whose turn to bid
-  passedA:false,passedB:false,
-  winner:null,   // which team won the auction
-  timerInt:null,timerSec:30,
-  timerStarted:false,
-};
-
-function openChallenge(key,pts){
-  C.key=key;C.pts=pts;
-  C.challenge=CHALLENGES[Math.floor(Math.random()*CHALLENGES.length)];
-  C.bidA=0;C.bidB=0;
-  C.bidTurn=G.active; // active team bids first
-  C.passedA=false;C.passedB=false;
-  C.winner=null;C.timerStarted=false;
-  clearInterval(C.timerInt);
-  renderChallengeReveal();
-  document.getElementById('cModal').classList.add('open');
-}
-
-function renderChallengeReveal(){
-  document.getElementById('cBody').innerHTML=`
-    <div class="ch-reveal">
-      <span class="ch-icon">${C.challenge.icon}</span>
-      <div class="ch-label">⚡ CHALLENGE ROUND</div>
-      <div class="ch-title">${C.challenge.title}</div>
-      <div class="ch-desc">${C.challenge.desc}</div>
-    </div>
-    <div class="ha" style="justify-content:center">
-      <button class="hb reveal" style="max-width:260px" onclick="renderChallengeBid()">START BIDDING →</button>
-    </div>`;
-}
-
-function renderChallengeBid(){
-  const nameA=G.tA.name.toUpperCase();
-  const nameB=G.tB.name.toUpperCase();
-  // figure out who is currently bidding
-  const bidderName=C.bidTurn==='A'?nameA:nameB;
-  const bidderCol=C.bidTurn==='A'?'var(--team-a)':'var(--team-b)';
-  const currentBid=Math.max(C.bidA,C.bidB);
-  // each team can bid or pass; if both pass the last bidder wins
-  // if no bids yet, starting bid is 1
-  const nextBid=currentBid+1;
-
-  // determine if current bidder already passed
-  const alreadyPassed=C.bidTurn==='A'?C.passedA:C.passedB;
-
-  document.getElementById('cBody').innerHTML=`
-    <div class="ch-reveal" style="padding-bottom:12px">
-      <span class="ch-icon" style="font-size:2.5rem">${C.challenge.icon}</span>
-      <div class="ch-title" style="font-size:1.8rem">${C.challenge.title}</div>
-    </div>
-    <div class="bid-status" id="bidStatus">How many can you name?</div>
-    <div class="bid-area">
-      <div class="bid-card ba${C.bidTurn==='A'?' active-bid':''}${C.winner==='A'?' winner-bid':''}">
-        <div class="bname">${nameA}</div>
-        <div class="bnum">${C.bidA||'–'}</div>
-        <div class="bid-btns">
-          ${C.bidTurn==='A'&&!C.passedA?`<button class="bid-btn up" onclick="placeBid('A',${nextBid})">BID ${nextBid}</button>
-          <button class="bid-btn pass" onclick="passBid('A')">PASS</button>`
-          :`<span style="font-family:var(--font-cond);font-size:.75rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em">${C.passedA?'PASSED':C.bidA>0?'BID PLACED':'WAITING'}</span>`}
-        </div>
-      </div>
-      <div class="bid-card bb${C.bidTurn==='B'?' active-bid':''}${C.winner==='B'?' winner-bid':''}">
-        <div class="bname">${nameB}</div>
-        <div class="bnum">${C.bidB||'–'}</div>
-        <div class="bid-btns">
-          ${C.bidTurn==='B'&&!C.passedB?`<button class="bid-btn up" onclick="placeBid('B',${nextBid})">BID ${nextBid}</button>
-          <button class="bid-btn pass" onclick="passBid('B')">PASS</button>`
-          :`<span style="font-family:var(--font-cond);font-size:.75rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em">${C.passedB?'PASSED':C.bidB>0?'BID PLACED':'WAITING'}</span>`}
-        </div>
-      </div>
-    </div>
-    <div class="bid-turn-indicator" id="bidTurnInd">
-      <span style="color:${bidderCol}">${bidderName}</span>'S TURN TO BID
-    </div>`;
-}
-
-function placeBid(team,amount){
-  if(team==='A') C.bidA=amount;
-  else C.bidB=amount;
-
-  const otherTeam=team==='A'?'B':'A';
-  const otherPassed=otherTeam==='A'?C.passedA:C.passedB;
-
-  if(otherPassed){
-    // other team already passed — this team wins with their bid
-    C.winner=team;
-    renderChallengeCountdown();
-  } else {
-    // switch turn to other team
-    C.bidTurn=otherTeam;
-    renderChallengeBid();
-  }
-}
-
-function passBid(team){
-  if(team==='A') C.passedA=true;
-  else C.passedB=true;
-
-  const otherTeam=team==='A'?'B':'A';
-  const otherBid=otherTeam==='A'?C.bidA:C.bidB;
-  const myBid=team==='A'?C.bidA:C.bidB;
-  const bothPassed=C.passedA&&C.passedB;
-
-  if(bothPassed){
-    // both passed — whoever bid more wins; if neither bid, active team wins at 1
-    if(C.bidA===0&&C.bidB===0){
-      C.winner=G.active;
-      if(C.winner==='A')C.bidA=1;else C.bidB=1;
-    } else {
-      C.winner=C.bidA>=C.bidB?'A':'B';
-    }
-    renderChallengeCountdown();
-  } else if(otherBid>0){
-    // other team already has a bid — passing means they win
-    C.winner=otherTeam;
-    renderChallengeCountdown();
-  } else {
-    // other team hasn't bid yet — switch to them
-    C.bidTurn=otherTeam;
-    renderChallengeBid();
-  }
-}
-
-function renderChallengeCountdown(){
-  const winnerName=(C.winner==='A'?G.tA.name:G.tB.name).toUpperCase();
-  const winnerCol=C.winner==='A'?'var(--team-a)':'var(--team-b)';
-  const targetBid=C.winner==='A'?C.bidA:C.bidB;
-  C.timerSec=30;C.timerStarted=false;
-
-  document.getElementById('cBody').innerHTML=`
-    <div class="ctimer-wrap">
-      <div class="ctimer-team" style="color:${winnerCol}">${winnerName}</div>
-      <div class="ctimer-target">${C.challenge.icon} Name ${targetBid} — ${C.challenge.title.replace('Name ','')}</div>
-      <div class="ctimer-num" id="cTimerNum">30</div>
-      <div class="ctimer-bar-w"><div class="ctimer-bar" id="cTimerBar"></div></div>
-    </div>
-    <button class="start-timer-btn" id="startTimerBtn" onclick="startChallengeTimer()">
-      ${winnerName} — WE'RE READY! START! ▶
-    </button>
-    <div class="ha" id="cHA" style="display:none">
-      <button class="hb c" onclick="resolveChallenge(true)">✓ REACHED ${targetBid}!</button>
-      <button class="hb w" onclick="resolveChallenge(false)">✗ DIDN'T MAKE IT</button>
-    </div>`;
-}
-
-function startChallengeTimer(){
-  if(C.timerStarted)return;
-  C.timerStarted=true;
-  document.getElementById('startTimerBtn').disabled=true;
-  document.getElementById('startTimerBtn').textContent='TIMER RUNNING... GO!';
-  C.timerSec=30;
-  clearInterval(C.timerInt);
-  C.timerInt=setInterval(()=>{
-    C.timerSec--;
-    const pct=Math.max(0,(C.timerSec/30)*100);
-    const numEl=document.getElementById('cTimerNum');
-    const barEl=document.getElementById('cTimerBar');
-    if(numEl)numEl.textContent=C.timerSec;
-    if(barEl)barEl.style.width=pct+'%';
-    if(C.timerSec<=10){
-      if(numEl)numEl.classList.add('urg');
-      if(barEl)barEl.style.background='var(--red)';
-      boop();
-    }
-    if(C.timerSec<=0){
-      clearInterval(C.timerInt);
-      if(numEl){numEl.textContent='0';numEl.classList.add('urg');}
-      // auto-show judge buttons
-      const haEl=document.getElementById('cHA');
-      const startBtn=document.getElementById('startTimerBtn');
-      if(haEl)haEl.style.display='flex';
-      if(startBtn)startBtn.style.display='none';
-    }
-  },1000);
-}
-
-function resolveChallenge(success){
-  clearInterval(C.timerInt);
-  document.getElementById('cModal').classList.remove('open');
-  document.getElementById('cBody').innerHTML='';
-
-  // mark cell used
-  G.used[C.key]=true;
-  const cell=document.getElementById(`c-${C.key}`);
-  if(cell){cell.classList.add('used');cell.classList.remove('locked','challenge');cell.innerHTML='';cell.onclick=null;}
-
-  if(success){
-    const wName=C.winner==='A'?G.tA.name:G.tB.name;
-    const target=C.winner==='A'?C.bidA:C.bidB;
-    addLog('challenge',`${wName} completed the challenge — ${C.challenge.icon} ${target} ${C.challenge.title.replace('Name ','')}`,C.pts);
-    showPop('correct',C.winner,false);
-    setTimeout(()=>{
-      if(C.winner==='A'){G.tA.score+=C.pts;animSc('scA');}
-      else{G.tB.score+=C.pts;animSc('scB');}
-      playOk();
-      G.active=G.active==='A'?'B':'A';
-      updScore();updLocks();
-      if(Object.keys(G.used).length>=G.totalCells)endGame();
-    },1700);
-  } else {
-    const loser=C.winner;
-    const other=loser==='A'?'B':'A';
-    const lName=loser==='A'?G.tA.name:G.tB.name;
-    const oName2=other==='A'?G.tA.name:G.tB.name;
-    addLog('wrong',`${lName} failed the challenge — ${oName2} gets the points`);
-    showPop('wrong',loser,false);
-    setTimeout(()=>{
-      showPop('correct',other,true);
-      setTimeout(()=>{
-        if(other==='A'){G.tA.score+=C.pts;animSc('scA');}
-        else{G.tB.score+=C.pts;animSc('scB');}
-        playOk();
-        G.active=G.active==='A'?'B':'A';
-        updScore();updLocks();
-        if(Object.keys(G.used).length>=G.totalCells)endGame();
-      },1700);
-    },1500);
-  }
 }
 
 function renderCustomQSetup(ownerName){
