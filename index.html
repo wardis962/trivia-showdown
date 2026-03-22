@@ -933,7 +933,7 @@ async function openQ(cat,diff,pts,key){
         <div class="q-audio-label">Now Playing</div>
         <div class="q-audio-hint">Listen carefully — name the song AND artist!</div>
       </div>
-      <button class="q-audio-btn" id="audioPlayBtn" onclick="toggleAudio('${q.audio}')">▶ PLAY</button>
+      <button class="q-audio-btn" id="audioPlayBtn" onclick="toggleAudio('${q.audio}',${q.clipStart!=null?q.clipStart:'null'})">▶ PLAY</button>
     </div>`;
   }
 
@@ -965,7 +965,7 @@ async function openQ(cat,diff,pts,key){
   }
   // auto-play audio for song questions, use longer timer
   if(isSong){
-    setTimeout(()=>toggleAudio(q.audio),400);
+    setTimeout(()=>toggleAudio(q.audio,q.clipStart??null),400);
     startTimer(90);
   } else {
     startTimer(60);
@@ -1633,27 +1633,27 @@ const QUESTION_DATA = {
     {"question":"What weight division did Manny Pacquiao win to become champion in 8 divisions?","correct":"Super welterweight"}
   ],
   "101-easy": [
-    {"question":"Who is this player?","correct":"Cristiano Ronaldo","image":"https://img.a.transfermarkt.technology/portrait/big/8198-1698671065.jpg","options":["Cristiano Ronaldo","Lionel Messi","Neymar","Kylian Mbappé"]},
-    {"question":"Who is this player?","correct":"Lionel Messi","image":"https://img.a.transfermarkt.technology/portrait/big/28003-1695827515.jpg","options":["Lionel Messi","Cristiano Ronaldo","Luka Modric","Sergio Ramos"]},
-    {"question":"Who is this player?","correct":"Kylian Mbappé","image":"https://img.a.transfermarkt.technology/portrait/big/342229-1695905198.jpg","options":["Kylian Mbappé","Antoine Griezmann","Ousmane Dembélé","Karim Benzema"]},
-    {"question":"Who is this player?","correct":"Mohamed Salah","image":"https://img.a.transfermarkt.technology/portrait/big/148455-1698671374.jpg","options":["Mohamed Salah","Sadio Mané","Riyad Mahrez","Hakim Ziyech"]},
-    {"question":"Who is this player?","correct":"Robert Lewandowski","image":"https://img.a.transfermarkt.technology/portrait/big/38253-1695905456.jpg","options":["Robert Lewandowski","Karim Benzema","Harry Kane","Erling Haaland"]},
-    {"question":"Who is this player?","correct":"Neymar Jr","image":"https://img.a.transfermarkt.technology/portrait/big/68290-1695905139.jpg","options":["Neymar Jr","Vinicius Jr","Rodrygo","Richarlison"]}
+    {"question":"Who is this player?","correct":"Cristiano Ronaldo","image":"players/ronaldo.jpg","options":["Cristiano Ronaldo","Lionel Messi","Neymar","Kylian Mbappé"]},
+    {"question":"Who is this player?","correct":"Lionel Messi","image":"players/messi.jpg","options":["Lionel Messi","Cristiano Ronaldo","Luka Modric","Sergio Ramos"]},
+    {"question":"Who is this player?","correct":"Kylian Mbappé","image":"players/mbappe.jpg","options":["Kylian Mbappé","Antoine Griezmann","Ousmane Dembélé","Karim Benzema"]},
+    {"question":"Who is this player?","correct":"Mohamed Salah","image":"players/salah.jpg","options":["Mohamed Salah","Sadio Mané","Riyad Mahrez","Hakim Ziyech"]},
+    {"question":"Who is this player?","correct":"Robert Lewandowski","image":"players/lewandowski.jpg","options":["Robert Lewandowski","Karim Benzema","Harry Kane","Erling Haaland"]},
+    {"question":"Who is this player?","correct":"Neymar Jr","image":"players/neymar.jpg","options":["Neymar Jr","Vinicius Jr","Rodrygo","Richarlison"]}
   ],
   "101-medium": [
-    {"question":"Who is this player? Name him.","correct":"Erling Haaland","image":"https://img.a.transfermarkt.technology/portrait/big/418560-1695905581.jpg"},
-    {"question":"Who is this player? Name him.","correct":"Luka Modric","image":"https://img.a.transfermarkt.technology/portrait/big/27992-1695905185.jpg"},
-    {"question":"Who is this player? Name him.","correct":"Kevin De Bruyne","image":"https://img.a.transfermarkt.technology/portrait/big/88755-1695905319.jpg"},
-    {"question":"Who is this player? Name him.","correct":"Jude Bellingham","image":"https://img.a.transfermarkt.technology/portrait/big/581678-1695906185.jpg"},
-    {"question":"Who is this player? Name him.","correct":"Virgil van Dijk","image":"https://img.a.transfermarkt.technology/portrait/big/139208-1695905386.jpg"},
-    {"question":"Who is this player? Name him.","correct":"Vinicius Jr","image":"https://img.a.transfermarkt.technology/portrait/big/371998-1695905224.jpg"}
+    {"question":"Who is this player? Name him.","correct":"Erling Haaland","image":"players/haaland.jpg"},
+    {"question":"Who is this player? Name him.","correct":"Luka Modric","image":"players/modric.jpg"},
+    {"question":"Who is this player? Name him.","correct":"Kevin De Bruyne","image":"players/debruyne.png"},
+    {"question":"Who is this player? Name him.","correct":"Jude Bellingham","image":"players/bellingham.jpg"},
+    {"question":"Who is this player? Name him.","correct":"Virgil van Dijk","image":"players/vandijk.jpg"},
+    {"question":"Who is this player? Name him.","correct":"Vinicius Jr","image":"players/vinicius.jpg"}
   ],
   "101-hard": [
-    {"question":"Who is this player? Name him and his current club.","correct":"Pedri — Barcelona","image":"https://img.a.transfermarkt.technology/portrait/big/608862-1695905470.jpg"},
-    {"question":"Who is this player? Name him and his nationality.","correct":"Rodri — Spanish","image":"https://img.a.transfermarkt.technology/portrait/big/357565-1695905557.jpg"},
-    {"question":"Who is this player? Name him and what he is famous for.","correct":"Zinedine Zidane — headbutt in 2006 World Cup final","image":"https://img.a.transfermarkt.technology/portrait/big/3588-1473412803.jpg"},
-    {"question":"Who is this player? Name him and his country.","correct":"Son Heung-min — South Korea","image":"https://img.a.transfermarkt.technology/portrait/big/139093-1695905410.jpg"},
-    {"question":"Who is this player? Name him and his position.","correct":"Thibaut Courtois — Goalkeeper","image":"https://img.a.transfermarkt.technology/portrait/big/106144-1695905350.jpg"}
+    {"question":"Who is this player? Name him and his current club.","correct":"Pedri — Barcelona","image":"players/pedri.jpg"},
+    {"question":"Who is this player? Name him and his nationality.","correct":"Bukayo Saka — English","image":"players/saka.jpg"},
+    {"question":"Who is this player? Name him and what he is famous for.","correct":"Zinedine Zidane — headbutt in 2006 World Cup final","image":"players/zidane.jpg"},
+    {"question":"Who is this player? Name him and his country.","correct":"Son Heung-min — South Korea","image":"players/son.jpg"},
+    {"question":"Who is this player? Name him and his position.","correct":"Thibaut Courtois — Goalkeeper","image":"players/courtois.jpg"}
   ],
   // ── API CATEGORY FALLBACK (works locally without a server) ──
   "21-easy": [
@@ -1837,16 +1837,16 @@ const QUESTION_DATA = {
     {"question":"What is the name of the phenomenon where light bends around a massive object?","correct":"Gravitational lensing"}
   ],
   "104-easy": [
-    {"question":"Name this song and artist!","correct":"Blinding Lights — The Weeknd","audio":"songs/blinding-lights.mp3"},
-    {"question":"Name this song and artist!","correct":"Don't Matter — Akon","audio":"songs/dont-matter.mp3"}
+    {"question":"Name this song and artist!","correct":"Blinding Lights — The Weeknd","audio":"songs/blinding-lights.mp3","clipStart":27},
+    {"question":"Name this song and artist!","correct":"Don't Matter — Akon","audio":"songs/dont-matter.mp3","clipStart":5}
   ],
   "104-medium": [
-    {"question":"Name this song and artist!","correct":"Levitating — Dua Lipa","audio":"songs/levitating.mp3"},
-    {"question":"Name this song and artist!","correct":"HUMBLE. — Kendrick Lamar","audio":"songs/humble.mp3"}
+    {"question":"Name this song and artist!","correct":"Levitating — Dua Lipa","audio":"songs/levitating.mp3","clipStart":18},
+    {"question":"Name this song and artist!","correct":"HUMBLE. — Kendrick Lamar","audio":"songs/humble.mp3","clipStart":3}
   ],
   "104-hard": [
-    {"question":"Name this song and artist!","correct":"Thunder — Imagine Dragons","audio":"songs/thunder.mp3"},
-    {"question":"Name this song and artist!","correct":"Ms. Jackson — Outkast","audio":"songs/ms-jackson.mp3"}
+    {"question":"Name this song and artist!","correct":"Thunder — Imagine Dragons","audio":"songs/thunder.mp3","clipStart":7},
+    {"question":"Name this song and artist!","correct":"Ms. Jackson — Outkast","audio":"songs/ms-jackson.mp3","clipStart":8}
   ]
 };
 
@@ -1856,11 +1856,14 @@ Object.entries(QUESTION_DATA).forEach(([key,qs])=>{
   CUSTOM_BANK[key].push(...qs.map(q=>({
     question:q.question||'',
     correct:q.correct,
-    options:q.options||null,
+    options:q.options?shuffle([...q.options]):null,
     image:q.image||null,
-    audio:q.audio||null
+    audio:q.audio||null,
+    clipStart:q.clipStart||null
   })));
 });
+// Shuffle each bank so questions appear in random order each game
+Object.keys(CUSTOM_BANK).forEach(k=>shuffle(CUSTOM_BANK[k]));
 
 // ── AUDIO PLAYER (for Guess the Song) ──
 let currentAudio=null;
@@ -1868,38 +1871,35 @@ let audioStopTimer=null;
 const SONG_CLIP_START = 12; // seconds to skip intro
 const SONG_CLIP_LENGTH = 14; // seconds to play per clip
 
-function toggleAudio(src){
+function toggleAudio(src,clipStart){
   const btn=document.getElementById('audioPlayBtn');
-  if(currentAudio&&!currentAudio.paused){
-    stopAudio();
-    return;
+  const startAt=(clipStart!=null?clipStart:SONG_CLIP_START);
+
+  if(currentAudio&&!currentAudio.paused){stopAudio();return;}
+
+  function startPlayback(){
+    if(audioStopTimer)clearTimeout(audioStopTimer);
+    currentAudio.play().catch(()=>{});
+    if(btn){btn.textContent='⏸ PAUSE';btn.classList.add('playing');}
+    audioStopTimer=setTimeout(()=>stopAudio(),SONG_CLIP_LENGTH*1000);
   }
 
-  const isSameSrc = currentAudio&&currentAudio.src===src;
+  const isSameSrc=currentAudio&&currentAudio.src.endsWith(src.replace(/^\.\//,''));
   if(!isSameSrc){
     stopAudio();
-
     currentAudio=new Audio(src);
     currentAudio.preload='auto';
-
-    currentAudio.onended=()=>{
-      stopAudio();
-    };
-
+    currentAudio.onended=()=>stopAudio();
+    // seek first, then play — never plays intro
     currentAudio.addEventListener('loadedmetadata',()=>{
-      if(currentAudio.duration>SONG_CLIP_START){
-        currentAudio.currentTime=SONG_CLIP_START;
-      }
-    });
-  } else if(currentAudio.ended || (currentAudio.duration&&currentAudio.currentTime>=currentAudio.duration-0.1)){
-    currentAudio.currentTime=SONG_CLIP_START;
+      currentAudio.currentTime=Math.min(startAt,currentAudio.duration-1);
+    },{once:true});
+    currentAudio.addEventListener('seeked',startPlayback,{once:true});
+    currentAudio.load();
+  } else {
+    currentAudio.addEventListener('seeked',startPlayback,{once:true});
+    currentAudio.currentTime=startAt;
   }
-
-  currentAudio.play().catch(()=>{});
-  if(btn){btn.textContent='⏸ PAUSE';btn.classList.add('playing');}
-
-  if(audioStopTimer){clearTimeout(audioStopTimer);}
-  audioStopTimer=setTimeout(()=>{stopAudio();}, SONG_CLIP_LENGTH*1000);
 }
 
 function stopAudio(){
