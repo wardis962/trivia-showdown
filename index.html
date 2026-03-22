@@ -814,7 +814,7 @@ function ownerOf(id){
 
 function renderBoard(){
   const board=document.getElementById('board');
-  const cats=[...G.tA.cats,...G.tB.cats,...G.shared];
+  const cats=[...G.tA.cats,...G.shared,...G.tB.cats];
   board.style.gridTemplateColumns=`repeat(${cats.length},1fr)`;
   board.innerHTML='';
   cats.forEach(cat=>{
@@ -862,7 +862,7 @@ function renderBoard(){
 }
 
 function updLocks(){
-  const cats=[...G.tA.cats,...G.tB.cats,...G.shared];
+  const cats=[...G.tA.cats,...G.shared,...G.tB.cats];
   [{k:'easy',p:1},{k:'medium',p:2},{k:'hard',p:3}].forEach(d=>{
     cats.forEach(cat=>{
       const key=`${cat.id}-${d.k}`;
@@ -1456,7 +1456,7 @@ function submitCustomQs(){
 }
 
 function renderEditor(){
-  const cats=[...G.tA.cats,...G.tB.cats,...G.shared];
+  const cats=[...G.tA.cats,...G.shared,...G.tB.cats];
   edCat=cats[0];
   const tabs=document.getElementById('edCatTabs');
   tabs.innerHTML='';
