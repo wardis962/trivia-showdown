@@ -1021,7 +1021,7 @@ function resolveChallenge(success){
   }
   G.active=G.active==='A'?'B':'A';
   updScore();updLocks();
-  if(Object.keys(G.used).length>=G.totalCells)endGame();
+  postTurnCheck();
 }
 
 async function openQ(cat,diff,pts,key){
@@ -1231,6 +1231,22 @@ function showPop(type,team,isSteal){
 
 function animSc(id){const el=document.getElementById(id).querySelector('.pts');el.style.animation='scUp .4s ease';setTimeout(()=>el.style.animation='',500);}
 
+function postTurnCheck(){
+  if(Object.keys(G.used).length>=G.totalCells){endGame();return;}
+  const cats=[...G.tA.cats,...G.shared,...G.tB.cats];
+  const diffs=['easy','medium','hard'];
+  const canPick=team=>cats.some(cat=>{
+    const ow=ownerOf(cat.id);
+    return (ow==='S'||ow===team)&&diffs.some(d=>!G.used[`${cat.id}-${d}`]);
+  });
+  if(!canPick(G.active)&&canPick(G.active==='A'?'B':'A')){
+    const stuckName=G.active==='A'?G.tA.name:G.tB.name;
+    G.active=G.active==='A'?'B':'A';
+    updScore();updLocks();
+    addLog('skip',`${stuckName} has no more picks — turn passes automatically`);
+  }
+}
+
 function closeQ(markUsed){
   stopTimer();
   stopAudio();
@@ -1244,7 +1260,7 @@ function closeQ(markUsed){
     G.active=G.active==='A'?'B':'A';
   }
   updScore();updLocks();
-  if(Object.keys(G.used).length>=G.totalCells)endGame();
+  postTurnCheck();
 }
 
 // ── GAME LOG ──
