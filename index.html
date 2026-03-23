@@ -595,6 +595,9 @@ const CATS=[
   {id:102, name:"Jordan",           icon:"🇯🇴", type:"custom"},
   {id:103, name:"Boxing",           icon:"🥊", type:"custom"},
   {id:104, name:"Guess the Song",   icon:"🎵", type:"custom"},
+  {id:106, name:"Gaming",            icon:"🎮", type:"custom"},
+  {id:107, name:"Tech & Social Media",icon:"📱", type:"custom"},
+  {id:108, name:"Memes & Internet",  icon:"😂", type:"custom"},
   {id:105, name:"Custom Questions", icon:"✏️", type:"custom"},
 ];
 const DIFF_TYPE={easy:'mcq',medium:'open',hard:'open'};
@@ -923,6 +926,27 @@ const CHALLENGE_BANK={
   105:[ // Custom Questions
     {icon:'✏️',text:'Name 3 things related to the topic of your custom category'},
     {icon:'🎯',text:'Describe one of your custom questions — teammate guesses the answer'},
+  ],
+  106:[ // Gaming
+    {icon:'🎮',text:'Name 5 video game franchises that have sold over 100 million copies'},
+    {icon:'⚡',text:'Name 4 Valorant agents'},
+    {icon:'🏆',text:'Name 4 esports games with professional tournaments'},
+    {icon:'🎯',text:'Name 3 weapons in CS:GO/CS2'},
+    {icon:'🕹️',text:'Name 5 video game characters that are instantly recognisable'},
+  ],
+  107:[ // Tech & Social Media
+    {icon:'📱',text:'Name 5 social media platforms'},
+    {icon:'💡',text:'Name 4 tech billionaires'},
+    {icon:'🤖',text:'Name 3 AI tools people use today'},
+    {icon:'🍎',text:'Name 4 Apple products'},
+    {icon:'🌐',text:'Name 3 Google products besides Search'},
+  ],
+  108:[ // Memes & Internet
+    {icon:'😂',text:'Name 4 classic internet memes'},
+    {icon:'🎬',text:'Re-enact a meme — teammate guesses which one'},
+    {icon:'📱',text:'Name 4 famous TikTok trends'},
+    {icon:'🎵',text:'Name 3 songs that became memes'},
+    {icon:'🗣️',text:'Name 4 internet slang terms and explain what they mean'},
   ],
 };
 
@@ -1444,7 +1468,11 @@ const QUESTION_DATA = {
     {"question":"What is the largest city in Jordan?","correct":"Amman","options":["Amman","Zarqa","Irbid","Aqaba"]},
     {"question":"What is the name of the sea bordering Jordan to the west?","correct":"Dead Sea","options":["Dead Sea","Red Sea","Mediterranean Sea","Arabian Sea"]},
     {"question":"What is the official language of Jordan?","correct":"Arabic","options":["Arabic","English","French","Turkish"]},
-    {"question":"Jordan shares a border with how many countries?","correct":"5","options":["5","3","4","6"]}
+    {"question":"Jordan shares a border with how many countries?","correct":"5","options":["5","3","4","6"]},
+    {"question":"What is the tallest mountain in Jordan?","correct":"Jabal Umm ad Dami","options":["Jabal Umm ad Dami","Jabal Rum","Jabal Ajloun","Jabal Al Arab"]},
+    {"question":"What sea does Jordan have access to?","correct":"Red Sea","options":["Red Sea","Mediterranean Sea","Dead Sea","Arabian Sea"]},
+    {"question":"What is the name of Jordan's royal family?","correct":"Hashemite","options":["Hashemite","Al Saud","Al Nahyan","Al Thani"]},
+    {"question":"Which famous ancient trade route passes through Jordan?","correct":"King's Highway","options":["King's Highway","Silk Road","Spice Route","Desert Road"]}
   ],
   "102-medium": [
     {"question":"In what year did Jordan gain independence from Britain?","correct":"1946"},
@@ -1480,7 +1508,10 @@ const QUESTION_DATA = {
     {"question":"Which country is Canelo Alvarez from?","correct":"Mexico","options":["Mexico","USA","Puerto Rico","Cuba"]},
     {"question":"What is the term for a boxer who leads with their right hand?","correct":"Southpaw","options":["Southpaw","Orthodox","Switch","Rightie"]},
     {"question":"How many judges score a professional boxing match?","correct":"3","options":["3","2","4","5"]},
-    {"question":"What do boxers wear on their hands?","correct":"Boxing gloves","options":["Boxing gloves","Tape only","Bare fists","Mittens"]}
+    {"question":"What do boxers wear on their hands?","correct":"Boxing gloves","options":["Boxing gloves","Tape only","Bare fists","Mittens"]},
+    {"question":"What does 'KO' stand for in boxing?","correct":"Knockout","options":["Knockout","Kick Out","Keep Off","Knock Over"]},
+    {"question":"Which boxing legend is known as 'The Greatest'?","correct":"Muhammad Ali","options":["Muhammad Ali","Mike Tyson","Floyd Mayweather","Manny Pacquiao"]},
+    {"question":"How many corners are in a boxing ring?","correct":"4","options":["4","3","2","6"]}
   ],
   "103-medium": [
     {"question":"Who is known as 'The Greatest' in boxing history?","correct":"Muhammad Ali"},
@@ -1721,6 +1752,117 @@ const QUESTION_DATA = {
   "104-hard": [
     {"question":"Name this song and artist!","correct":"Thunder — Imagine Dragons","audio":"songs/thunder.mp3","clipStart":7},
     {"question":"Name this song and artist!","correct":"Ms. Jackson — Outkast","audio":"songs/ms-jackson.mp3","clipStart":8}
+  ],
+
+  "106-easy": [
+    {"question":"Which game features 100 players dropping from a Battle Bus to be the last one standing?","correct":"Fortnite","options":["Fortnite","PUBG","Warzone","Apex Legends"]},
+    {"question":"What is the best-selling video game of all time?","correct":"Minecraft","options":["Minecraft","GTA 5","FIFA","Tetris"]},
+    {"question":"In Among Us, what are the non-impostors called?","correct":"Crewmates","options":["Crewmates","Survivors","Agents","Innocents"]},
+    {"question":"Which company makes the PlayStation?","correct":"Sony","options":["Sony","Microsoft","Nintendo","Sega"]},
+    {"question":"What does 'GG' mean in gaming?","correct":"Good Game","options":["Good Game","Great Goal","Get Going","Game Gone"]},
+    {"question":"What is the name of the green explosive creature in Minecraft?","correct":"Creeper","options":["Creeper","Zombie","Blaze","Enderman"]},
+    {"question":"Which game is famous for its 'V-Bucks' currency?","correct":"Fortnite","options":["Fortnite","Roblox","Minecraft","Call of Duty"]},
+    {"question":"In FIFA Ultimate Team, what color are the highest-rated regular player cards?","correct":"Gold","options":["Gold","Silver","Bronze","Platinum"]},
+    {"question":"Which company makes the Xbox?","correct":"Microsoft","options":["Microsoft","Sony","Nintendo","Sega"]},
+    {"question":"What type of game is Valorant?","correct":"Tactical Shooter","options":["Tactical Shooter","Battle Royale","MOBA","Sports"]}
+  ],
+  "106-medium": [
+    {"question":"What is the highest rank in Valorant?","correct":"Radiant"},
+    {"question":"Who created Minecraft?","correct":"Markus 'Notch' Persson"},
+    {"question":"What year did Fortnite Battle Royale launch?","correct":"2017"},
+    {"question":"In GTA 5, what is the name of the city the game is set in?","correct":"Los Santos"},
+    {"question":"What does 'MOBA' stand for?","correct":"Multiplayer Online Battle Arena"},
+    {"question":"Which game features the 'Gulag' mechanic where eliminated players fight for a second chance?","correct":"Call of Duty Warzone"},
+    {"question":"In Minecraft, what is the name of the final boss?","correct":"The Ender Dragon"},
+    {"question":"What was Fortnite's original game mode before Battle Royale?","correct":"Save the World"},
+    {"question":"In League of Legends, how many players are on each team?","correct":"5"},
+    {"question":"What is the in-game currency in Roblox called?","correct":"Robux"}
+  ],
+  "106-hard": [
+    {"question":"What year was the first Call of Duty game released?","correct":"2003"},
+    {"question":"What does 'CS:GO' stand for?","correct":"Counter-Strike: Global Offensive"},
+    {"question":"Who is the CEO of Epic Games, the makers of Fortnite?","correct":"Tim Sweeney"},
+    {"question":"In competitive CS:GO, how many total rounds does a match consist of?","correct":"30 rounds"},
+    {"question":"Which game studio developed The Last of Us?","correct":"Naughty Dog"},
+    {"question":"What year was League of Legends officially released?","correct":"2009"},
+    {"question":"What was the peak concurrent player record on Steam, held by which game?","correct":"PUBG with over 3 million concurrent players"},
+    {"question":"In Valorant lore, what is the name of the organization the agents work for?","correct":"The VALORANT Protocol"},
+    {"question":"What does 'RPG' stand for in gaming?","correct":"Role-Playing Game"},
+    {"question":"Which game introduced the 'Battle Royale' genre to mainstream popularity on PC in 2017?","correct":"PUBG (PlayerUnknown's Battlegrounds)"}
+  ],
+
+  "107-easy": [
+    {"question":"What does 'AI' stand for?","correct":"Artificial Intelligence","options":["Artificial Intelligence","Automated Internet","Advanced Interface","Applied Intelligence"]},
+    {"question":"Which app has a ghost as its logo?","correct":"Snapchat","options":["Snapchat","WhatsApp","Telegram","Discord"]},
+    {"question":"Which company owns Instagram?","correct":"Meta","options":["Meta","Google","Apple","Twitter"]},
+    {"question":"What is the name of Apple's voice assistant?","correct":"Siri","options":["Siri","Alexa","Cortana","Bixby"]},
+    {"question":"Which app is known for its 'For You Page' and short videos?","correct":"TikTok","options":["TikTok","YouTube","Instagram","Snapchat"]},
+    {"question":"Who founded Apple?","correct":"Steve Jobs","options":["Steve Jobs","Bill Gates","Mark Zuckerberg","Elon Musk"]},
+    {"question":"What does 'DM' stand for on social media?","correct":"Direct Message","options":["Direct Message","Daily Message","Digital Media","Data Management"]},
+    {"question":"What color is the WhatsApp logo?","correct":"Green","options":["Green","Blue","Red","Yellow"]},
+    {"question":"Which company makes the iPhone?","correct":"Apple","options":["Apple","Samsung","Google","Sony"]},
+    {"question":"What does 'WiFi' stand for?","correct":"Wireless Fidelity","options":["Wireless Fidelity","Wide Frequency","Wireless Finance","World Interface"]}
+  ],
+  "107-medium": [
+    {"question":"What year was ChatGPT launched to the public?","correct":"2022"},
+    {"question":"Who is the CEO of Tesla and SpaceX?","correct":"Elon Musk"},
+    {"question":"What year did Elon Musk buy Twitter?","correct":"2022"},
+    {"question":"What year was Instagram founded?","correct":"2010"},
+    {"question":"What does 'VPN' stand for?","correct":"Virtual Private Network"},
+    {"question":"What was the first video ever uploaded to YouTube?","correct":"Me at the zoo by Jawed Karim"},
+    {"question":"Who is the founder of Amazon?","correct":"Jeff Bezos"},
+    {"question":"What does 'API' stand for?","correct":"Application Programming Interface"},
+    {"question":"What is the name of Elon Musk's AI company?","correct":"xAI"},
+    {"question":"What is the name of Google's parent company?","correct":"Alphabet"}
+  ],
+  "107-hard": [
+    {"question":"In what year was the first iPhone released?","correct":"2007"},
+    {"question":"Who co-founded Microsoft alongside Bill Gates?","correct":"Paul Allen"},
+    {"question":"What year was TikTok launched internationally outside of China?","correct":"2017"},
+    {"question":"What was Twitter's original character limit before it was doubled?","correct":"140 characters"},
+    {"question":"What does 'HTTP' stand for?","correct":"HyperText Transfer Protocol"},
+    {"question":"Which company developed Android before Google acquired it?","correct":"Android Inc."},
+    {"question":"What year was Facebook founded?","correct":"2004"},
+    {"question":"What does 'RAM' stand for?","correct":"Random Access Memory"},
+    {"question":"What is the name of the AI model developed by Google released in 2023?","correct":"Gemini"},
+    {"question":"What programming language was originally created for web browsers and is now used almost everywhere?","correct":"JavaScript"}
+  ],
+
+  "108-easy": [
+    {"question":"What does 'LOL' stand for?","correct":"Laugh Out Loud","options":["Laugh Out Loud","Lots of Love","League of Legends","Laughing Online"]},
+    {"question":"What animal is featured in the 'Doge' meme?","correct":"Shiba Inu","options":["Shiba Inu","Golden Retriever","Husky","Corgi"]},
+    {"question":"What does 'AFK' mean?","correct":"Away From Keyboard","options":["Away From Keyboard","All For Keeps","Always Finding Keys","Active For Killing"]},
+    {"question":"What does 'GOAT' stand for?","correct":"Greatest Of All Time","options":["Greatest Of All Time","Going Over All Things","Get On Any Track","Greatest Of Any Team"]},
+    {"question":"Which meme features a dog sitting in a burning room saying 'This is fine'?","correct":"This Is Fine","options":["This Is Fine","Everything Is OK","I'm Fine","No Problem"]},
+    {"question":"What does 'NPC' stand for?","correct":"Non-Playable Character","options":["Non-Playable Character","New Player Character","Normal Person Character","No Play Confirmed"]},
+    {"question":"What does 'no cap' mean in internet slang?","correct":"No lie / I'm serious","options":["No lie / I'm serious","No hat","Not capitalised","No problem"]},
+    {"question":"What does 'sus' mean, popularised by Among Us?","correct":"Suspicious","options":["Suspicious","Stupid","Serious","Super"]},
+    {"question":"What does 'TBH' stand for?","correct":"To Be Honest","options":["To Be Honest","Try Be Happy","Time Being Here","To Be Heard"]},
+    {"question":"What does 'FYP' stand for on TikTok?","correct":"For You Page","options":["For You Page","Find Your People","Follow Your Path","Feed Your Posts"]}
+  ],
+  "108-medium": [
+    {"question":"What year did the video sharing platform Vine shut down?","correct":"2016"},
+    {"question":"What is 'Rick Rolling'?","correct":"Tricking someone into watching Rick Astley's Never Gonna Give You Up"},
+    {"question":"What viral 2012 challenge involved dumping ice water on yourself for charity?","correct":"Ice Bucket Challenge"},
+    {"question":"What Korean artist went viral worldwide in 2012 with 'Gangnam Style'?","correct":"PSY"},
+    {"question":"What is the name of the meme template showing a man looking back at another woman while with his girlfriend?","correct":"Distracted Boyfriend"},
+    {"question":"What was the first YouTube video to reach 1 billion views?","correct":"Gangnam Style by PSY"},
+    {"question":"What does 'FOMO' stand for?","correct":"Fear Of Missing Out"},
+    {"question":"What is the real name of the YouTuber PewDiePie?","correct":"Felix Kjellberg"},
+    {"question":"What does 'ratio' mean when someone says it on Twitter/X?","correct":"When a reply gets more likes than the original post"},
+    {"question":"What viral dance challenge took over the internet in early 2023?","correct":"The Cha-Cha Slide / Mia Khalifa dance / various — accept any correct viral dance"}
+  ],
+  "108-hard": [
+    {"question":"What year did the 'Harlem Shake' meme go viral?","correct":"2013"},
+    {"question":"What is the real name of the actor in the 'Hide the Pain Harold' meme?","correct":"András Arató"},
+    {"question":"What year did Gangnam Style break YouTube's view counter due to exceeding its integer limit?","correct":"2014"},
+    {"question":"What does 'TFW' mean in internet culture?","correct":"That Feeling When"},
+    {"question":"What was the name of the original platform where the 'Keyboard Cat' video was posted?","correct":"YouTube"},
+    {"question":"Who is 'Wojak'?","correct":"A simple drawing of a bald man used to express emotions, from Polish imageboards"},
+    {"question":"What was the name of the first internet meme widely considered to be the original viral meme?","correct":"Dancing Baby (Baby Cha-Cha)"},
+    {"question":"What does 'based' mean in modern internet slang?","correct":"Confidently holding an opinion regardless of others / being yourself unapologetically"},
+    {"question":"What is the name of the meme format where someone is called out with 'You just got'?","correct":"Rickrolled"},
+    {"question":"What famous Vine creator said 'Road work ahead? Uh yeah, I sure hope it does'?","correct":"Drew Gooden"}
   ]
 };
 
